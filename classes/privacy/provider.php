@@ -26,8 +26,6 @@
 
 namespace report_matrixreport\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Privacy Subsystem for report_matrixreport implementing null_provider.
  *

@@ -24,14 +24,6 @@
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
  */
 
-$string['neverseen'] = 'Never seen';
-$string['nocapability'] = 'Can not access user matrixreport report';
-$string['nologreaderenabled'] = 'No log reader enabled';
-$string['numviews'] = '{$a->numviews} views by {$a->distinctusers} users';
 $string['matrixreport:view'] = 'View activity report';
-$string['matrixreport:viewuserreport'] = 'View user activity report';
-$string['page-report-matrixreport-x'] = 'Any matrixreport report';
-$string['page-report-matrixreport-index'] = 'Course matrixreport report';
-$string['page-report-matrixreport-user'] = 'User course matrixreport report';
-$string['pluginname'] = 'Activity report';
-$string['privacy:metadata'] = 'The Activity report plugin does not store any personal data.';
+$string['pluginname'] = 'Matrix Report';
+$string['privacy:metadata'] = 'The Matrixreport report plugin does not store any personal data.';

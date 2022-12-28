@@ -36,3 +36,8 @@ require_login($course);
 $context = context_course::instance($course->id);
 
 require_capability('report/matrixreport:view', $context);
+
+echo $OUTPUT->header();
+
+
+echo $OUTPUT->footer();
