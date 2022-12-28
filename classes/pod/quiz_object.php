@@ -14,8 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+
 /**
- * Display user activity reports for a course (totals)
+ * Used to store modinfo and slot information for qtype_matrix elements.
  *
  * @package    report
  * @subpackage matrixreport
@@ -24,22 +25,18 @@
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
  */
 
-require('../../config.php');
+namespace report_matrixreport\pod;
 
-$id = required_param('id', PARAM_INT);
-$course = get_course($id);
+use cm_info;
 
-$PAGE->set_url(new moodle_url('/report/matrixreport/index.php'));
-$PAGE->set_pagelayout('report');
+class quiz_object {
 
-require_login($course);
-$context = context_course::instance($course->id);
+    public $info;
+    public $slots;
 
-require_capability('report/matrixreport:view', $context);
+    public function __construct(cm_info $info, array $slots) {
+        $this->info = $info;
+        $this->slots = $slots;
+    }
 
-$helper = new \report_matrixreport\quiz_helper($course->id);
-
-echo $OUTPUT->header();
-
-
-echo $OUTPUT->footer();
+}
