@@ -39,7 +39,7 @@ class quiz_helper {
         $this->courseid = $courseid;
         $this->quizlist = $this->load_quiz_instances();
         foreach ($this->quizlist as $quiz) {
-            var_dump($quiz->info->name);
+            //var_dump($quiz->info->name);
         }
     }
 

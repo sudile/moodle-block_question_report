@@ -16,7 +16,7 @@
 
 
 /**
- * Used to store modinfo and slot information for qtype_matrix elements.
+ * Class which manages matrix cols/rows/attempts
  *
  * @package    report
  * @subpackage matrixreport
@@ -27,33 +27,20 @@
 
 namespace report_matrixreport\pod;
 
-use cm_info;
+class matrix {
 
-class quiz_object {
-
-    public $info;
-    public $slots;
-    public $matrixentries;
-
-    public function __construct(cm_info $info, array $slots) {
-        $this->info = $info;
-        $this->slots = $slots;
-        $this->matrixentries = $this->load_matrix_questions();
+    private $record;
+    private $cols;
+    private $rows;
+    public function __construct($record) {
+        $this->record = $record;
     }
 
+    public function set_cols(array $cols) {
+        $this->cols = $cols;
+    }
 
-    private function load_matrix_questions(): array {
-        global $DB;
-        $result = [];
-        foreach ($this->slots as $slot) {
-            if ($slot->qtype == 'matrix') {
-                $record = $DB->get_record('qtype_matrix', ['questionid' => $slot->questionid]);
-                $matrix = new matrix($record);
-                $matrix->set_cols($DB->get_records('qtype_matrix_cols', ['matrixid' => $record->id]));
-                $matrix->set_rows($DB->get_records('qtype_matrix_rows', ['matrixid' => $record->id]));
-                $result[] = $matrix;
-            }
-        }
-        return $result;
+    public function set_rows(array $rows) {
+        $this->rows = $rows;
     }
 }
