@@ -38,10 +38,15 @@ $context = context_course::instance($course->id);
 
 require_capability('report/matrixreport:view', $context);
 
-$helper = new \report_matrixreport\quiz_helper($course->id);
-$overview = new \report_matrixreport\output\overview();
-$overview->set_quiz_list($helper->get_quiz_list());
 echo $OUTPUT->header();
-$renderer = $PAGE->get_renderer('report_matrixreport');
-echo $renderer->render_overview($overview);
+if ($cmid === 0) {
+    $helper = new \report_matrixreport\quiz_helper($course->id);
+    $overview = new \report_matrixreport\output\overview();
+    $overview->set_quiz_list($helper->get_quiz_list());
+    $renderer = $PAGE->get_renderer('report_matrixreport');
+    echo $renderer->render_overview($overview);
+} else {
+    echo 'single view';
+}
+
 echo $OUTPUT->footer();
