@@ -15,33 +15,37 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Display user activity reports for a course (totals)
+ * Report renderer
  *
- * @package    report
- * @subpackage matrixreport
+ * @package    report_matrixreport
  * @copyright  2022 sudile GbR (http://www.sudile.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
  */
 
-require('../../config.php');
+namespace report_matrixreport\output;
 
-$id = required_param('id', PARAM_INT);
-$cmid = optional_param('cmid', 0, PARAM_INT);
-$course = get_course($id);
+use moodle_exception;
 
-$PAGE->set_url(new moodle_url('/report/matrixreport/index.php'));
-$PAGE->set_pagelayout('report');
+/**
+ * Renderer for Matrixreport report
+ *
+ * @package    report_matrixreport
+ * @copyright  2022 sudile GbR (http://www.sudile.com)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Vincent Schneider <vincent.schneider@sudile.com>
+ */
+class renderer extends \plugin_renderer_base {
 
-require_login($course);
-$context = context_course::instance($course->id);
-
-require_capability('report/matrixreport:view', $context);
-
-$helper = new \report_matrixreport\quiz_helper($course->id);
-$overview = new \report_matrixreport\output\overview();
-$overview->set_quiz_list($helper->get_quiz_list());
-echo $OUTPUT->header();
-$renderer = $PAGE->get_renderer('report_matrixreport');
-echo $renderer->render_overview($overview);
-echo $OUTPUT->footer();
+    /**
+     * Render an RSS feeds block
+     *
+     * @param overview $overview
+     * @return string|boolean
+     * @throws moodle_exception
+     */
+    public function render_overview(overview $overview) {
+        $data = $overview->export_for_template($this);
+        return $this->render_from_template('report_matrixreport/overview', $data);
+    }
+}

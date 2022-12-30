@@ -31,18 +31,32 @@ use cm_info;
 
 class quiz_object {
 
-    public $info;
-    public $slots;
-    public $matrixentries;
+    private $info;
+    private $slots;
+    private $matrixentries;
 
     public function __construct(cm_info $info, array $slots) {
         $this->info = $info;
         $this->slots = $slots;
-        $this->matrixentries = $this->load_matrix_questions();
     }
 
+    public function get_name(): string {
+        return $this->info->get_name();
+    }
 
-    private function load_matrix_questions(): array {
+    public function get_cmid(): int {
+        return $this->info->id;
+    }
+
+    public function get_description(): string {
+        return $this->info->content;
+    }
+
+    /**
+     * @return matrix[]
+     * @throws \dml_exception
+     */
+    public function load_matrix_questions(): array {
         global $DB;
         $result = [];
         foreach ($this->slots as $slot) {

@@ -32,6 +32,7 @@ class matrix {
     private $record;
     private $cols;
     private $rows;
+
     public function __construct($record) {
         $this->record = $record;
     }

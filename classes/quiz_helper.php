@@ -38,9 +38,13 @@ class quiz_helper {
     public function __construct(int $courseid) {
         $this->courseid = $courseid;
         $this->quizlist = $this->load_quiz_instances();
-        foreach ($this->quizlist as $quiz) {
-            //var_dump($quiz->info->name);
-        }
+    }
+
+    /**
+     * @return quiz_object[]
+     */
+    public function get_quiz_list(): array {
+        return $this->quizlist;
     }
 
     /**
