@@ -38,7 +38,7 @@ use moodle_exception;
 class renderer extends \plugin_renderer_base {
 
     /**
-     * Render an RSS feeds block
+     * Render quiz instance overview
      *
      * @param overview $overview
      * @return string|boolean
@@ -47,5 +47,17 @@ class renderer extends \plugin_renderer_base {
     public function render_overview(overview $overview) {
         $data = $overview->export_for_template($this);
         return $this->render_from_template('report_matrixreport/overview', $data);
+    }
+
+    /**
+     * Render quiz attempt
+     *
+     * @param attempt $attempt
+     * @return string|boolean
+     * @throws moodle_exception
+     */
+    public function render_attempt(attempt $attempt) {
+        $data = $attempt->export_for_template($this);
+        return $this->render_from_template('report_matrixreport/attempt', $data);
     }
 }

@@ -26,7 +26,6 @@
 
 namespace report_matrixreport;
 
-use mod_quiz\question\bank\qbank_helper;
 use report_matrixreport\pod\quiz_object;
 
 class quiz_helper {
@@ -41,19 +40,17 @@ class quiz_helper {
     }
 
     /**
-     * @return quiz_object[]
+     * @return \cm_info[]
      */
     public function get_quiz_list(): array {
         return $this->quizlist;
     }
 
     /**
-     * @return quiz_object[]
+     * @return \cm_info[]
      * @throws \moodle_exception
      */
     private function load_quiz_instances(): array {
-        global $CFG;
-        require_once($CFG->dirroot . '/question/engine/bank.php');
         $result = [];
         $modinfo = get_fast_modinfo($this->courseid);
         $sections = $modinfo->get_section_info_all();
@@ -66,13 +63,7 @@ class quiz_helper {
                         continue;
                     }
                     if ($mod->modname == 'quiz') {
-                        $slots = qbank_helper::get_question_structure($mod->instance, $mod->context);
-                        foreach ($slots as $slot) {
-                            if ($slot->qtype == 'matrix') {
-                                $result[] = new quiz_object($mod, $slots);
-                                break;
-                            }
-                        }
+                        $result[] = $mod;
                     }
                 }
             }

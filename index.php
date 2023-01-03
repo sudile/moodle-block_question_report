@@ -24,10 +24,12 @@
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
  */
 
+
 require('../../config.php');
 
 $id = required_param('id', PARAM_INT);
 $cmid = optional_param('cmid', 0, PARAM_INT);
+$attempt = optional_param('attempt', 0, PARAM_INT);
 $course = get_course($id);
 
 $PAGE->set_url(new moodle_url('/report/matrixreport/index.php'));
@@ -36,17 +38,45 @@ $PAGE->set_pagelayout('report');
 require_login($course);
 $context = context_course::instance($course->id);
 
-require_capability('report/matrixreport:view', $context);
-
 echo $OUTPUT->header();
+$renderer = $PAGE->get_renderer('report_matrixreport');
 if ($cmid === 0) {
     $helper = new \report_matrixreport\quiz_helper($course->id);
     $overview = new \report_matrixreport\output\overview();
     $overview->set_quiz_list($helper->get_quiz_list());
-    $renderer = $PAGE->get_renderer('report_matrixreport');
     echo $renderer->render_overview($overview);
 } else {
-    echo 'single view';
+    global $USER, $CFG;
+    require_once('../../mod/quiz/lib.php');
+    $cm = get_coursemodule_from_id('quiz', $cmid, $course->id, false, MUST_EXIST);
+    $attempts = array_values(quiz_get_user_attempts([$cm->instance], $USER->id));
+    if (count($attempts) !== 0) {
+        $attemptview = new \report_matrixreport\output\attempt();
+        $attemptview->set_cm($cm);
+        $attemptview->set_course($course);
+        $attemptview->set_attempts($attempts);
+        foreach ($attempts as $attemptobj) {
+            if ($attemptobj->id == $attempt) {
+                $attemptview->set_current_attempt($attemptobj);
+                break;
+            }
+        }
+        if ($attemptview->get_current_attempt() == null) {
+            $attemptview->set_current_attempt($attempts[count($attempts)-1]);
+        }
+
+        require_once($CFG->dirroot . '/question/engine/bank.php');
+        $attemptobj = $attemptview->get_current_attempt();
+        $x = question_engine::load_questions_usage_by_activity($attemptobj->uniqueid);
+        $result = [];
+        foreach ($x->get_slots() as $slot) {
+            $question = $x->get_question($slot);
+            $questionattempt = $x->get_question_attempt($slot);
+            $result[] = ['fraction' => $questionattempt->get_fraction(), 'name' => $question->name];
+        }
+        $attemptview->set_result($result);
+        echo $renderer->render_attempt($attemptview);
+    }
 }
 
 echo $OUTPUT->footer();

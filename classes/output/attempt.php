@@ -31,32 +31,51 @@ use renderer_base;
 use report_matrixreport\pod\quiz_object;
 use templatable;
 
-class overview implements renderable, templatable {
-    /**
-     * @var \cm_info[]
-     */
-    private $quizlist;
+class attempt implements renderable, templatable {
 
-    /**
-     * @param \cm_info[] $quizlist
-     * @return void
-     */
-    public function set_quiz_list(array $quizlist) {
-        $this->quizlist = $quizlist;
+    private $attempt = null;
+    private $attempts = [];
+    private $course = null;
+    private $cm = null;
+    private $result = [];
+
+    public function set_current_attempt(object $attempt): void {
+        $this->attempt = $attempt;
+    }
+
+    public function get_current_attempt(): ?object {
+        return $this->attempt;
+    }
+
+    public function set_attempts(array $attempts): void {
+        $this->attempts = $attempts;
+    }
+
+    public function set_course(object $course) : void {
+        $this->course = $course;
+    }
+
+    public function set_cm(object $cm) : void {
+        $this->cm = $cm;
+    }
+
+    public function set_result(array $result) : void {
+        $this->result = $result;
     }
 
     public function export_for_template(renderer_base $output): array {
-        global $COURSE;
         $data = [
-            'quizzes' => [],
-            'coursename' => $COURSE->fullname
+            'quizname' => $this->cm->name,
+            'attempts' => [],
+            'results' => $this->result
         ];
-        foreach ($this->quizlist as $quiz) {
-            $data['quizzes'][] = [
-                'name' => $quiz->get_name(),
+        foreach ($this->attempts as $attempt) {
+            $data['attempts'][] = [
+                'id' => $attempt->attempt,
                 'url' => new \moodle_url('/report/matrixreport/index.php',
-                    ['id' => $COURSE->id, 'cmid' => $quiz->id]),
-                'description' => $quiz->content,
+                    ['id' => $this->course->id, 'cmid' => $this->cm->id, 'attempt' => $attempt->id]),
+                'date' => usertime($attempt->timefinish),
+                'active' => $attempt->id == $this->attempt->id
             ];
         }
         return $data;
