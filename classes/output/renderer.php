@@ -23,7 +23,7 @@
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
  */
 
-namespace report_matrixreport\output;
+namespace block_question_report\output;
 
 use moodle_exception;
 
@@ -46,7 +46,7 @@ class renderer extends \plugin_renderer_base {
      */
     public function render_overview(overview $overview) {
         $data = $overview->export_for_template($this);
-        return $this->render_from_template('report_matrixreport/overview', $data);
+        return $this->render_from_template('block_question_report/overview', $data);
     }
 
     /**
@@ -58,6 +58,6 @@ class renderer extends \plugin_renderer_base {
      */
     public function render_attempt(attempt $attempt) {
         $data = $attempt->export_for_template($this);
-        return $this->render_from_template('report_matrixreport/attempt', $data);
+        return $this->render_from_template('block_question_report/attempt', $data);
     }
 }

@@ -15,15 +15,39 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings
+ * Question report block.
  *
- * @package    report
- * @subpackage matrixreport
+ * @package    block
+ * @subpackage question_report
  * @copyright  2022 sudile GbR (http://www.sudile.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
  */
+class block_question_report extends block_base {
 
-$string['matrixreport:view'] = 'View activity report';
-$string['pluginname'] = 'Matrix Report';
-$string['privacy:metadata'] = 'The Matrixreport report plugin does not store any personal data.';
+    public function init(): void {
+        $this->title = get_string('pluginname', 'block_question_report');
+    }
+
+    public function applicable_formats(): array {
+        return ['course' => true];
+    }
+
+    public function instance_allow_multiple(): bool {
+        return false;
+    }
+
+    public function get_content(): object {
+        global $COURSE;
+        if ($this->content !== null) {
+            return $this->content;
+        }
+        $this->content = new stdClass();
+        $this->content->text = html_writer::link(new moodle_url('/blocks/question_report/index.php',
+            ['id' => $COURSE->id]),
+            get_string('reports', 'block_question_report'));
+        $this->content->footer = '';
+        return $this->content;
+    }
+}
+

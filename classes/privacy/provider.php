@@ -24,7 +24,7 @@
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
  */
 
-namespace report_matrixreport\privacy;
+namespace block_question_report\privacy;
 
 /**
  * Privacy Subsystem for report_matrixreport implementing null_provider.

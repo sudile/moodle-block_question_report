@@ -14,34 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
- * Class which manages matrix cols/rows/attempts
+ * Strings
  *
- * @package    report
- * @subpackage matrixreport
+ * @package    block
+ * @subpackage question_report
  * @copyright  2022 sudile GbR (http://www.sudile.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
  */
 
-namespace report_matrixreport\pod;
-
-class matrix {
-
-    private $record;
-    private $cols;
-    private $rows;
-
-    public function __construct($record) {
-        $this->record = $record;
-    }
-
-    public function set_cols(array $cols) {
-        $this->cols = $cols;
-    }
-
-    public function set_rows(array $rows) {
-        $this->rows = $rows;
-    }
-}
+$string['pluginname'] = 'Question Report';
+$string['privacy:metadata'] = 'The Question report block plugin does not store any personal data.';
+$string['reports'] = 'View reports for the current course.';

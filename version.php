@@ -17,8 +17,8 @@
 /**
  * Version info
  *
- * @package    report
- * @subpackage matrixreport
+ * @package    block
+ * @subpackage question_report
  * @copyright  2022 sudile GbR (http://www.sudile.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
@@ -26,6 +26,6 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2022112803;       // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version = 2023010400;       // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires = 2022111800;       // Requires this Moodle version.
-$plugin->component = 'report_matrixreport'; // Full name of the plugin (used for diagnostics).
+$plugin->component = 'block_question_report'; // Full name of the plugin (used for diagnostics).

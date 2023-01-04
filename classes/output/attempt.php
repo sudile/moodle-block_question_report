@@ -17,13 +17,13 @@
 /**
  * Contains class overview
  *
- * @package    report_matrixreport
+ * @package    block_question_report
  * @copyright  2022 sudile GbR (http://www.sudile.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
  */
 
-namespace report_matrixreport\output;
+namespace block_question_report\output;
 
 
 use renderable;
@@ -62,6 +62,30 @@ class attempt implements renderable, templatable {
         $this->result = $result;
     }
 
+    public function export_for_template(renderer_base $output): array {
+        $data = [
+            'quizname' => $this->cm->name,
+            'attempts' => [],
+            'results' => []
+        ];
+        foreach ($this->attempts as $attempt) {
+            $data['attempts'][] = [
+                'id' => $attempt->attempt,
+                'url' => new \moodle_url('/block/question_report/index.php',
+                    ['id' => $this->course->id, 'cmid' => $this->cm->id, 'attempt' => $attempt->id]),
+                'date' => usertime($attempt->timefinish),
+                'active' => $attempt->id == $this->attempt->id
+            ];
+        }
+        foreach ($this->result as $result) {
+            $data['results'][] = $result + [
+                    'color' => $this->make_color(1 - $result['fraction']),
+                    'percentage' => $result['fraction'] * 100
+                ];
+        }
+        return $data;
+    }
+
     private function make_color($value, $min = 0, $max = .5) {
         $ratio = $value;
         if ($min > 0 || $max < 1) {
@@ -85,6 +109,22 @@ class attempt implements renderable, templatable {
         return "rgb($r,$g,$b)";
     }
 
+    private function hsl_to_rgb($h, $s, $l) {
+        if ($s == 0) {
+            $r = $l;
+            $g = $l;
+            $b = $l; // achromatic
+        } else {
+            $q = $l < 0.5 ? $l * (1 + $s) : $l + $s - $l * $s;
+            $p = 2 * $l - $q;
+            $r = $this->hue2rgb($p, $q, $h + 1 / 3);
+            $g = $this->hue2rgb($p, $q, $h);
+            $b = $this->hue2rgb($p, $q, $h - 1 / 3);
+        }
+
+        return ['r' => round($r * 255), 'g' => round($g * 255), 'b' => round($b * 255)];
+    }
+
     private function hue2rgb($p, $q, $t) {
         if ($t < 0) {
             $t += 1;
@@ -102,45 +142,5 @@ class attempt implements renderable, templatable {
             return $p + ($q - $p) * (2 / 3 - $t) * 6;
         }
         return $p;
-    }
-
-    private function hsl_to_rgb($h, $s, $l) {
-        if ($s == 0) {
-            $r = $l;
-            $g = $l;
-            $b = $l; // achromatic
-        } else {
-            $q = $l < 0.5 ? $l * (1 + $s) : $l + $s - $l * $s;
-            $p = 2 * $l - $q;
-            $r = $this->hue2rgb($p, $q, $h + 1 / 3);
-            $g = $this->hue2rgb($p, $q, $h);
-            $b = $this->hue2rgb($p, $q, $h - 1 / 3);
-        }
-
-        return ['r' => round($r * 255), 'g' => round($g * 255), 'b' => round($b * 255)];
-    }
-
-    public function export_for_template(renderer_base $output): array {
-        $data = [
-            'quizname' => $this->cm->name,
-            'attempts' => [],
-            'results' => []
-        ];
-        foreach ($this->attempts as $attempt) {
-            $data['attempts'][] = [
-                'id' => $attempt->attempt,
-                'url' => new \moodle_url('/report/matrixreport/index.php',
-                    ['id' => $this->course->id, 'cmid' => $this->cm->id, 'attempt' => $attempt->id]),
-                'date' => usertime($attempt->timefinish),
-                'active' => $attempt->id == $this->attempt->id
-            ];
-        }
-        foreach ($this->result as $result) {
-            $data['results'][] = $result + [
-                'color' => $this->make_color(1 - $result['fraction']),
-                'percentage' => $result['fraction'] * 100
-            ];
-        }
-        return $data;
     }
 }

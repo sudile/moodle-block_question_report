@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Display user activity reports for a course (totals)
+ * Display question attempts for current user for a course (totals)
  *
- * @package    report
- * @subpackage matrixreport
+ * @package    block
+ * @subpackage question_report
  * @copyright  2022 sudile GbR (http://www.sudile.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
@@ -32,17 +32,16 @@ $cmid = optional_param('cmid', 0, PARAM_INT);
 $attempt = optional_param('attempt', 0, PARAM_INT);
 $course = get_course($id);
 
-$PAGE->set_url(new moodle_url('/report/matrixreport/index.php'));
-$PAGE->set_pagelayout('report');
-
+$PAGE->set_url(new moodle_url('/blocks/question_report/index.php'));
 require_login($course);
 $context = context_course::instance($course->id);
+$PAGE->set_context($context);
 
 echo $OUTPUT->header();
-$renderer = $PAGE->get_renderer('report_matrixreport');
+$renderer = $PAGE->get_renderer('block_question_report');
 if ($cmid === 0) {
-    $helper = new \report_matrixreport\quiz_helper($course->id);
-    $overview = new \report_matrixreport\output\overview();
+    $helper = new \block_question_report\quiz_helper($course->id);
+    $overview = new \block_question_report\output\overview();
     $overview->set_quiz_list($helper->get_quiz_list());
     echo $renderer->render_overview($overview);
 } else {
@@ -55,7 +54,7 @@ if ($cmid === 0) {
         $context = context_module::instance($cm->id);
         $quiz = $DB->get_record('quiz', ['id' => $cm->instance]);
 
-        $attemptview = new \report_matrixreport\output\attempt();
+        $attemptview = new \block_question_report\output\attempt();
         $attemptview->set_cm($cm);
         $attemptview->set_course($course);
         $attemptview->set_attempts($attempts);
@@ -69,7 +68,6 @@ if ($cmid === 0) {
             $attemptview->set_current_attempt($attempts[count($attempts) - 1]);
         }
 
-        require_once($CFG->dirroot . '/question/engine/bank.php');
         $attemptobj = $attemptview->get_current_attempt();
         $x = question_engine::load_questions_usage_by_activity($attemptobj->uniqueid);
         $result = [];
@@ -80,7 +78,8 @@ if ($cmid === 0) {
                 'id' => $slot,
                 'fraction' => $questionattempt->get_fraction(),
                 'name' => $question->name,
-                'feedback' => strip_tags(quiz_feedback_record_for_grade($questionattempt->get_fraction() * 10, $quiz)->feedbacktext)
+                'feedback' => strip_tags(quiz_feedback_record_for_grade($questionattempt->get_fraction() * 10,
+                    $quiz)->feedbacktext)
             ];
         }
         $attemptview->set_result($result);

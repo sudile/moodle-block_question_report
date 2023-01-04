@@ -15,28 +15,37 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file contains public API of matrixreport report
+ * Question report block caps.
  *
- * @package    report
- * @subpackage matrixreport
+ * @package    block
+ * @subpackage question_report
  * @copyright  2022 sudile GbR (http://www.sudile.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
  */
 
+defined('MOODLE_INTERNAL') || die();
 
-/**
- * This function extends the course navigation with the report items
- *
- * @param navigation_node $navigation The navigation node to extend
- * @param stdClass        $course     The course to object for the report
- * @param stdClass        $context    The context of the course
- */
-function report_matrixreport_extend_navigation_course($navigation, $course, $context) {
-    $url = new moodle_url('/report/matrixreport/index.php', ['id' => $course->id]);
-    $navigation->add(get_string('pluginname', 'report_matrixreport'),
-        $url,
-        navigation_node::TYPE_CUSTOM,
-        '',
-        'matrixreportcourse');
-}
+$capabilities = [
+
+    'block/question_report:myaddinstance' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'user' => CAP_ALLOW
+        ],
+
+        'clonepermissionsfrom' => 'moodle/my:manageblocks'
+    ],
+
+    'block/question_report:addinstance' => [
+        'riskbitmask' => RISK_SPAM,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_BLOCK,
+        'archetypes' => [
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ],
+        'clonepermissionsfrom' => 'moodle/site:manageblocks'
+    ],
+];

@@ -15,18 +15,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Helper to interact with quiz instances which use matrix question type (qtype_matrix).
+ * Helper to interact with quiz instances
  *
- * @package    report
- * @subpackage matrixreport
+ * @package    block
+ * @subpackage question_report
  * @copyright  2022 sudile GbR (http://www.sudile.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
  */
 
-namespace report_matrixreport;
-
-use report_matrixreport\pod\quiz_object;
+namespace block_question_report;
 
 class quiz_helper {
 
@@ -37,13 +35,6 @@ class quiz_helper {
     public function __construct(int $courseid) {
         $this->courseid = $courseid;
         $this->quizlist = $this->load_quiz_instances();
-    }
-
-    /**
-     * @return \cm_info[]
-     */
-    public function get_quiz_list(): array {
-        return $this->quizlist;
     }
 
     /**
@@ -69,5 +60,12 @@ class quiz_helper {
             }
         }
         return $result;
+    }
+
+    /**
+     * @return \cm_info[]
+     */
+    public function get_quiz_list(): array {
+        return $this->quizlist;
     }
 }

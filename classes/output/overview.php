@@ -23,12 +23,11 @@
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
  */
 
-namespace report_matrixreport\output;
+namespace block_question_report\output;
 
 
 use renderable;
 use renderer_base;
-use report_matrixreport\pod\quiz_object;
 use templatable;
 
 class overview implements renderable, templatable {
@@ -54,7 +53,7 @@ class overview implements renderable, templatable {
         foreach ($this->quizlist as $quiz) {
             $data['quizzes'][] = [
                 'name' => $quiz->get_name(),
-                'url' => new \moodle_url('/report/matrixreport/index.php',
+                'url' => new \moodle_url('/blocks/question_report/index.php',
                     ['id' => $COURSE->id, 'cmid' => $quiz->id]),
                 'description' => $quiz->content,
             ];
