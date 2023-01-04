@@ -79,10 +79,17 @@ class attempt implements renderable, templatable {
             ];
         }
         foreach ($this->result as $result) {
-            $data['results'][] = $result + [
-                    'color' => $this->make_color(1 - $result['fraction']),
-                    'percentage' => $result['fraction'] >= 1 ? 100 : $result['fraction'] * 100
-                ];
+            if ($result['fraction'] >= 1) {
+                $result['fraction'] = 1;
+            }
+            $data['results'][] = [
+                'id' => $result['id'],
+                'name' => $result['name'],
+                'feedback' => $result['feedback'],
+                'fraction' => round($result['fraction'] * 100, 2) . '%',
+                'color' => $this->make_color(1 - $result['fraction']),
+                'percentage' => $result['fraction'] * 100
+            ];
         }
         return $data;
     }

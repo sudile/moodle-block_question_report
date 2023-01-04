@@ -34,3 +34,8 @@ $string['default_below_57'] = 'sufficient';
 $string['default_below_72'] = 'satisfying';
 $string['default_below_87'] = 'good';
 $string['default_below_100'] = 'very good';
+
+$string['table_name'] = 'Name';
+$string['table_percentage'] = 'Percentage';
+$string['table_feedback'] = 'Feedback';
+$string['table_progress'] = 'Progress';
