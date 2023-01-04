@@ -28,7 +28,6 @@ namespace report_matrixreport\output;
 
 use renderable;
 use renderer_base;
-use report_matrixreport\pod\quiz_object;
 use templatable;
 
 class attempt implements renderable, templatable {
@@ -51,23 +50,81 @@ class attempt implements renderable, templatable {
         $this->attempts = $attempts;
     }
 
-    public function set_course(object $course) : void {
+    public function set_course(object $course): void {
         $this->course = $course;
     }
 
-    public function set_cm(object $cm) : void {
+    public function set_cm(object $cm): void {
         $this->cm = $cm;
     }
 
-    public function set_result(array $result) : void {
+    public function set_result(array $result): void {
         $this->result = $result;
+    }
+
+    private function make_color($value, $min = 0, $max = .5) {
+        $ratio = $value;
+        if ($min > 0 || $max < 1) {
+            if ($value < $min) {
+                $ratio = 1;
+            } else if ($value > $max) {
+                $ratio = 0;
+            } else {
+                $range = $min - $max;
+                $ratio = ($value - $max) / $range;
+            }
+        }
+
+        $hue = ($ratio * 1.2) / 3.60;
+        $rgb = $this->hsl_to_rgb($hue, 1, .5);
+
+        $r = round($rgb['r'], 0);
+        $g = round($rgb['g'], 0);
+        $b = round($rgb['b'], 0);
+
+        return "rgb($r,$g,$b)";
+    }
+
+    private function hue2rgb($p, $q, $t) {
+        if ($t < 0) {
+            $t += 1;
+        }
+        if ($t > 1) {
+            $t -= 1;
+        }
+        if ($t < 1 / 6) {
+            return $p + ($q - $p) * 6 * $t;
+        }
+        if ($t < 1 / 2) {
+            return $q;
+        }
+        if ($t < 2 / 3) {
+            return $p + ($q - $p) * (2 / 3 - $t) * 6;
+        }
+        return $p;
+    }
+
+    private function hsl_to_rgb($h, $s, $l) {
+        if ($s == 0) {
+            $r = $l;
+            $g = $l;
+            $b = $l; // achromatic
+        } else {
+            $q = $l < 0.5 ? $l * (1 + $s) : $l + $s - $l * $s;
+            $p = 2 * $l - $q;
+            $r = $this->hue2rgb($p, $q, $h + 1 / 3);
+            $g = $this->hue2rgb($p, $q, $h);
+            $b = $this->hue2rgb($p, $q, $h - 1 / 3);
+        }
+
+        return ['r' => round($r * 255), 'g' => round($g * 255), 'b' => round($b * 255)];
     }
 
     public function export_for_template(renderer_base $output): array {
         $data = [
             'quizname' => $this->cm->name,
             'attempts' => [],
-            'results' => $this->result
+            'results' => []
         ];
         foreach ($this->attempts as $attempt) {
             $data['attempts'][] = [
@@ -76,6 +133,12 @@ class attempt implements renderable, templatable {
                     ['id' => $this->course->id, 'cmid' => $this->cm->id, 'attempt' => $attempt->id]),
                 'date' => usertime($attempt->timefinish),
                 'active' => $attempt->id == $this->attempt->id
+            ];
+        }
+        foreach ($this->result as $result) {
+            $data['results'][] = $result + [
+                'color' => $this->make_color(1 - $result['fraction']),
+                'percentage' => $result['fraction'] * 100
             ];
         }
         return $data;

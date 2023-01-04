@@ -30,16 +30,37 @@
         {{/attempts}}
     </div>
 
-    <div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Fraction</th>
+            <th scope="col">Feedback</th>
+            <th scope="col">Progress</th>
+        </tr>
+        </thead>
+        <tbody>
         {{#results}}
-            <div>
-                <span>
+            <tr>
+                <th scope="row">{{id}}</th>
+                <td>
                     {{name}}
-                </span>
-                <span>
+                </td>
+                <td>
                     {{fraction}}
-                </span>
-            </div>
+                </td>
+                <td>
+                    {{feedback}}
+                </td>
+                <td>
+                    <div class="progressbar" style="display: inline-block; width: 100px;">
+                        <div style="width: {{percentage}}%; border-radius: 10px;  height: 30px; background-color: {{color}}">
+                        </div>
+                    </div>
+                </td>
+            </tr>
         {{/results}}
-    </div>
+        </tbody>
+    </table>
 </div>

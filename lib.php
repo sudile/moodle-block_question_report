@@ -30,18 +30,13 @@
  *
  * @param navigation_node $navigation The navigation node to extend
  * @param stdClass        $course     The course to object for the report
- * @param context         $context    The context of the course
- * @throws coding_exception
- * @throws moodle_exception
+ * @param stdClass        $context    The context of the course
  */
 function report_matrixreport_extend_navigation_course($navigation, $course, $context) {
-    if (has_capability('report/matrixreport:view', $context)) {
-        $url = new moodle_url('/report/matrixreport/index.php', ['id' => $course->id]);
-        $navigation->add(get_string('pluginname', 'report_matrixreport'),
-            $url,
-            navigation_node::TYPE_SETTING,
-            null,
-            null,
-            new pix_icon('i/report', ''));
-    }
+    $url = new moodle_url('/report/matrixreport/index.php', ['id' => $course->id]);
+    $navigation->add(get_string('pluginname', 'report_matrixreport'),
+        $url,
+        navigation_node::TYPE_CUSTOM,
+        '',
+        'matrixreportcourse');
 }

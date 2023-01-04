@@ -46,11 +46,15 @@ if ($cmid === 0) {
     $overview->set_quiz_list($helper->get_quiz_list());
     echo $renderer->render_overview($overview);
 } else {
-    global $USER, $CFG;
-    require_once('../../mod/quiz/lib.php');
+    global $USER, $CFG, $DB;
+    require_once($CFG->dirroot . '/mod/quiz/lib.php');
     $cm = get_coursemodule_from_id('quiz', $cmid, $course->id, false, MUST_EXIST);
     $attempts = array_values(quiz_get_user_attempts([$cm->instance], $USER->id));
     if (count($attempts) !== 0) {
+        require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+        $context = context_module::instance($cm->id);
+        $quiz = $DB->get_record('quiz', ['id' => $cm->instance]);
+
         $attemptview = new \report_matrixreport\output\attempt();
         $attemptview->set_cm($cm);
         $attemptview->set_course($course);
@@ -62,7 +66,7 @@ if ($cmid === 0) {
             }
         }
         if ($attemptview->get_current_attempt() == null) {
-            $attemptview->set_current_attempt($attempts[count($attempts)-1]);
+            $attemptview->set_current_attempt($attempts[count($attempts) - 1]);
         }
 
         require_once($CFG->dirroot . '/question/engine/bank.php');
@@ -72,7 +76,12 @@ if ($cmid === 0) {
         foreach ($x->get_slots() as $slot) {
             $question = $x->get_question($slot);
             $questionattempt = $x->get_question_attempt($slot);
-            $result[] = ['fraction' => $questionattempt->get_fraction(), 'name' => $question->name];
+            $result[] = [
+                'id' => $slot,
+                'fraction' => $questionattempt->get_fraction(),
+                'name' => $question->name,
+                'feedback' => strip_tags(quiz_feedback_record_for_grade($questionattempt->get_fraction() * 10, $quiz)->feedbacktext)
+            ];
         }
         $attemptview->set_result($result);
         echo $renderer->render_attempt($attemptview);
