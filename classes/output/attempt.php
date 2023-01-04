@@ -66,7 +66,8 @@ class attempt implements renderable, templatable {
         $data = [
             'quizname' => $this->cm->name,
             'attempts' => [],
-            'results' => []
+            'results' => [],
+            'back' => new \moodle_url('/blocks/question_report/index.php', ['id' => $this->course->id])
         ];
         foreach ($this->attempts as $attempt) {
             $data['attempts'][] = [
@@ -80,7 +81,7 @@ class attempt implements renderable, templatable {
         foreach ($this->result as $result) {
             $data['results'][] = $result + [
                     'color' => $this->make_color(1 - $result['fraction']),
-                    'percentage' => $result['fraction'] * 100
+                    'percentage' => $result['fraction'] >= 1 ? 100 : $result['fraction'] * 100
                 ];
         }
         return $data;
@@ -113,7 +114,7 @@ class attempt implements renderable, templatable {
         if ($s == 0) {
             $r = $l;
             $g = $l;
-            $b = $l; // achromatic
+            $b = $l;
         } else {
             $q = $l < 0.5 ? $l * (1 + $s) : $l + $s - $l * $s;
             $p = 2 * $l - $q;

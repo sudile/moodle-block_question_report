@@ -21,9 +21,14 @@
 <div>
     <h2>{{quizname}}</h2>
     <div>
+        <div>
+            <a href="{{{back}}}">
+                {{#str}}back, block_question_report{{/str}}
+            </a>
+        </div>
         {{#attempts}}
-            <a href="{{{url}}}" style="{{#active}}background-color: red;{{/active}}">
-            <span class="name mr-1">
+            <a href="{{{url}}}" class="mr-1" style="{{#active}}background-color: red;{{/active}}">
+            <span class="name">
                 {{id}}
             </span>
             </a>
