@@ -27,3 +27,9 @@
 $string['pluginname'] = 'Question Report';
 $string['privacy:metadata'] = 'The Question report block plugin does not store any personal data.';
 $string['reports'] = 'View reports for the current course.';
+
+$string['default_below_50'] = 'not sufficient';
+$string['default_below_57'] = 'sufficient';
+$string['default_below_72'] = 'satisfying';
+$string['default_below_87'] = 'good';
+$string['default_below_100'] = 'very good';

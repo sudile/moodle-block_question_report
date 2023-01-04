@@ -71,7 +71,7 @@ class attempt implements renderable, templatable {
         foreach ($this->attempts as $attempt) {
             $data['attempts'][] = [
                 'id' => $attempt->attempt,
-                'url' => new \moodle_url('/block/question_report/index.php',
+                'url' => new \moodle_url('/blocks/question_report/index.php',
                     ['id' => $this->course->id, 'cmid' => $this->cm->id, 'attempt' => $attempt->id]),
                 'date' => usertime($attempt->timefinish),
                 'active' => $attempt->id == $this->attempt->id

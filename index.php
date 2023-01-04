@@ -25,6 +25,11 @@
  */
 
 
+use block_question_report\output\attempt;
+use block_question_report\output\overview;
+use block_question_report\quiz_helper;
+use block_question_report\util;
+
 require('../../config.php');
 
 $id = required_param('id', PARAM_INT);
@@ -40,8 +45,8 @@ $PAGE->set_context($context);
 echo $OUTPUT->header();
 $renderer = $PAGE->get_renderer('block_question_report');
 if ($cmid === 0) {
-    $helper = new \block_question_report\quiz_helper($course->id);
-    $overview = new \block_question_report\output\overview();
+    $helper = new quiz_helper($course->id);
+    $overview = new overview();
     $overview->set_quiz_list($helper->get_quiz_list());
     echo $renderer->render_overview($overview);
 } else {
@@ -50,11 +55,8 @@ if ($cmid === 0) {
     $cm = get_coursemodule_from_id('quiz', $cmid, $course->id, false, MUST_EXIST);
     $attempts = array_values(quiz_get_user_attempts([$cm->instance], $USER->id));
     if (count($attempts) !== 0) {
-        require_once($CFG->dirroot . '/mod/quiz/locallib.php');
         $context = context_module::instance($cm->id);
-        $quiz = $DB->get_record('quiz', ['id' => $cm->instance]);
-
-        $attemptview = new \block_question_report\output\attempt();
+        $attemptview = new attempt();
         $attemptview->set_cm($cm);
         $attemptview->set_course($course);
         $attemptview->set_attempts($attempts);
@@ -67,7 +69,6 @@ if ($cmid === 0) {
         if ($attemptview->get_current_attempt() == null) {
             $attemptview->set_current_attempt($attempts[count($attempts) - 1]);
         }
-
         $attemptobj = $attemptview->get_current_attempt();
         $x = question_engine::load_questions_usage_by_activity($attemptobj->uniqueid);
         $result = [];
@@ -78,8 +79,7 @@ if ($cmid === 0) {
                 'id' => $slot,
                 'fraction' => $questionattempt->get_fraction(),
                 'name' => $question->name,
-                'feedback' => strip_tags(quiz_feedback_record_for_grade($questionattempt->get_fraction() * 10,
-                    $quiz)->feedbacktext)
+                'feedback' => util::feedback_for_grade($cm->instance, $questionattempt->get_fraction())
             ];
         }
         $attemptview->set_result($result);
