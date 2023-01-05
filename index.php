@@ -75,11 +75,15 @@ if ($cmid === 0) {
         foreach ($x->get_slots() as $slot) {
             $question = $x->get_question($slot);
             $questionattempt = $x->get_question_attempt($slot);
+            $fraction = $questionattempt->get_fraction();
+            if ($fraction === null) {
+                continue;
+            }
             $result[] = [
                 'id' => $slot,
-                'fraction' => $questionattempt->get_fraction(),
+                'fraction' => $fraction,
                 'name' => $question->name,
-                'feedback' => util::feedback_for_grade($cm->instance, $questionattempt->get_fraction())
+                'feedback' => util::feedback_for_grade($cm->instance, $fraction)
             ];
         }
         $attemptview->set_result($result);
