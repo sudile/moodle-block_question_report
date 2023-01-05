@@ -73,8 +73,24 @@ if ($cmid === 0) {
         $x = question_engine::load_questions_usage_by_activity($attemptobj->uniqueid);
         $result = [];
         foreach ($x->get_slots() as $slot) {
-            $question = $x->get_question($slot);
             $questionattempt = $x->get_question_attempt($slot);
+            $question = $questionattempt->get_question();
+            $subpoints = [];
+            if ($question->get_type_name() == 'matrix') {
+                require_once($CFG->dirroot . '/question/type/matrix/question.php');
+                if ($question instanceof qtype_matrix_question) {
+                    $grading = $question->grading();
+                    $data = $questionattempt->get_steps_with_submitted_response_iterator()->current()->get_all_data();
+                    foreach ($question->rows as $row) {
+                        $fraction = $grading->grade_row($question, $row, $data);
+                        $subpoints[] = [
+                            'name' => $row->shorttext,
+                            'fraction' => $fraction,
+                            'feedback' => util::feedback_for_grade($cm->instance, $fraction)
+                        ];
+                    }
+                }
+            }
             $fraction = $questionattempt->get_fraction();
             if ($fraction === null) {
                 continue;
@@ -83,7 +99,8 @@ if ($cmid === 0) {
                 'id' => $slot,
                 'fraction' => $fraction,
                 'name' => $question->name,
-                'feedback' => util::feedback_for_grade($cm->instance, $fraction)
+                'feedback' => util::feedback_for_grade($cm->instance, $fraction),
+                'subpoints' => $subpoints
             ];
         }
         $attemptview->set_result($result);

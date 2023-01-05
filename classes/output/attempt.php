@@ -82,10 +82,16 @@ class attempt implements renderable, templatable {
             if ($result['fraction'] >= 1) {
                 $result['fraction'] = 1;
             }
+            foreach ($result['subpoints'] as &$subpoint) {
+                $subpoint['color'] = $this->make_color(1 - $subpoint['fraction']);
+                $subpoint['percentage'] = $subpoint['fraction'] * 100;
+                $subpoint['fraction'] = round($subpoint['fraction'] * 100, 2) . '%';
+            }
             $data['results'][] = [
                 'id' => $result['id'],
                 'name' => $result['name'],
                 'feedback' => $result['feedback'],
+                'subpoints' => $result['subpoints'],
                 'fraction' => round($result['fraction'] * 100, 2) . '%',
                 'color' => $this->make_color(1 - $result['fraction']),
                 'percentage' => $result['fraction'] * 100

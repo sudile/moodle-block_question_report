@@ -65,6 +65,26 @@
                     </div>
                 </td>
             </tr>
+            {{#subpoints}}
+                <tr>
+                    <th scope="row"></th>
+                    <td>
+                        {{name}}
+                    </td>
+                    <td>
+                        {{fraction}}
+                    </td>
+                    <td>
+                        {{feedback}}
+                    </td>
+                    <td>
+                        <div class="progressbar" style="display: inline-block; width: 100px; border-radius: 10px; background-color: lightgrey;">
+                            <div style="width: {{percentage}}%; border-radius: 10px;  height: 30px; background-color: {{color}}">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {{/subpoints}}
         {{/results}}
         </tbody>
     </table>
