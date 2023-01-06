@@ -26,16 +26,19 @@
 namespace block_question_report\pod;
 
 class matrix_row {
+    public $id;
     public $fraction;
     public $name;
     public $feedback;
 
     /**
+     * @param int    $id
      * @param float  $fraction
      * @param string $name
      * @param string $feedback
      */
-    public function __construct(float $fraction, string $name, string $feedback) {
+    public function __construct(int $id, float $fraction, string $name, string $feedback) {
+        $this->id = $id;
         $this->fraction = $fraction;
         $this->name = $name;
         $this->feedback = $feedback;

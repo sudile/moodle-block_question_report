@@ -35,6 +35,10 @@
         {{/attempts}}
     </div>
 
+    <div>
+        {{{chart}}}
+    </div>
+
     <table class="table">
         <thead>
         <tr>
@@ -43,6 +47,7 @@
             <th scope="col">{{#str}}table_percentage, block_question_report{{/str}}</th>
             <th scope="col">{{#str}}table_feedback, block_question_report{{/str}}</th>
             <th scope="col">{{#str}}table_progress, block_question_report{{/str}}</th>
+            <th scope="col">{{#str}}table_avgprogress, block_question_report{{/str}}</th>
         </tr>
         </thead>
         <tbody>
@@ -64,6 +69,12 @@
                         </div>
                     </div>
                 </td>
+                <td>
+                    <div class="progressbar" style="display: inline-block; width: 100px; border-radius: 10px; background-color: lightgrey;">
+                        <div style="width: {{avg}}%; border-radius: 10px;  height: 30px; background-color: {{avgcolor}}">
+                        </div>
+                    </div>
+                </td>
             </tr>
             {{#subpoints}}
                 <tr>
@@ -80,6 +91,12 @@
                     <td>
                         <div class="progressbar" style="display: inline-block; width: 100px; border-radius: 10px; background-color: lightgrey;">
                             <div style="width: {{percentage}}%; border-radius: 10px;  height: 30px; background-color: {{color}}">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="progressbar" style="display: inline-block; width: 100px; border-radius: 10px; background-color: lightgrey;">
+                            <div style="width: {{avg}}%; border-radius: 10px;  height: 30px; background-color: {{avgcolor}}">
                             </div>
                         </div>
                     </td>

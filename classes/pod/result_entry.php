@@ -26,25 +26,33 @@
 namespace block_question_report\pod;
 
 class result_entry {
+    public $questionid;
     public $id;
     public $fraction;
     public $name;
     public $feedback;
-    public $subpoints;
+    public $matrixrows;
 
     /**
-     * @param int    $id
-     * @param float  $fraction
-     * @param string $name
-     * @param string $feedback
-     * @param array  $subpoints
+     * @param int          $id
+     * @param float        $fraction
+     * @param string       $name
+     * @param string       $feedback
+     * @param int          $questionid
+     * @param matrix_row[] $matrixrows
      */
-    public function __construct(int $id, float $fraction, string $name, string $feedback, array $subpoints) {
+    public function __construct(int $id,
+        float $fraction,
+        string $name,
+        string $feedback,
+        int $questionid,
+        array $matrixrows) {
         $this->id = $id;
         $this->fraction = $fraction;
         $this->name = $name;
         $this->feedback = $feedback;
-        $this->subpoints = $subpoints;
+        $this->matrixrows = $matrixrows;
+        $this->questionid = $questionid;
     }
 
 }

@@ -28,6 +28,8 @@ $string['pluginname'] = 'Question Report';
 $string['privacy:metadata'] = 'The Question report block plugin does not store any personal data.';
 $string['reports'] = 'View reports';
 $string['back'] = 'Back to selection';
+$string['group'] = 'Group';
+$string['user'] = 'User';
 
 $string['default_below_50'] = 'not sufficient';
 $string['default_below_57'] = 'sufficient';
@@ -39,3 +41,4 @@ $string['table_name'] = 'Name';
 $string['table_percentage'] = 'Percentage';
 $string['table_feedback'] = 'Feedback';
 $string['table_progress'] = 'Progress';
+$string['table_avgprogress'] = 'Group Progress';
