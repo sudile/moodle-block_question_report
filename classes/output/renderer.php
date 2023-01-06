@@ -17,7 +17,7 @@
 /**
  * Report renderer
  *
- * @package    report_matrixreport
+ * @package    block_question_report
  * @copyright  2022 sudile GbR (http://www.sudile.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
@@ -26,11 +26,12 @@
 namespace block_question_report\output;
 
 use moodle_exception;
+use moodle_url;
 
 /**
  * Renderer for Matrixreport report
  *
- * @package    report_matrixreport
+ * @package    block_question_report
  * @copyright  2022 sudile GbR (http://www.sudile.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
@@ -41,24 +42,42 @@ class renderer extends \plugin_renderer_base {
      * Render quiz instance overview
      *
      * @param overview $overview
-     * @return string|boolean
      * @throws moodle_exception
      */
     public function render_overview(overview $overview) {
+        echo $this->output->header();
         $data = $overview->export_for_template($this);
-        return $this->render_from_template('block_question_report/overview', $data);
+        echo $this->render_from_template('block_question_report/overview', $data);
+        echo $this->output->footer();
     }
 
     /**
      * Render quiz attempt
      *
      * @param attempt $attempt
-     * @return string|boolean
      * @throws moodle_exception
      */
     public function render_attempt(attempt $attempt) {
+        $this->page->requires->css('/blocks/question_report/styles/attempt.css');
+        echo $this->output->header();
         $data = $attempt->export_for_template($this);
         $data['chart'] = $this->render($data['chart']);
-        return $this->render_from_template('block_question_report/attempt', $data);
+        echo $this->render_from_template('block_question_report/attempt', $data);
+        echo $this->output->footer();
+    }
+
+    /**
+     * Render quiz empty page
+     *
+     * @throws moodle_exception
+     */
+    public function render_noattempt(string $name, int $courseid) {
+        echo $this->output->header();
+        echo $this->render_from_template('block_question_report/noattempt',
+            [
+                'quizname' => $name,
+                'back' => new moodle_url('/blocks/question_report/index.php', ['id' => $courseid])
+            ]);
+        echo $this->output->footer();
     }
 }

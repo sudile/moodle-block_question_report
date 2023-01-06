@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Privacy Subsystem implementation for report_matrixreport.
+ * Privacy Subsystem implementation for block_question_report.
  *
- * @package    report
- * @subpackage matrixreport
+ * @package    block
+ * @subpackage question_report
  * @copyright  2022 sudile GbR (http://www.sudile.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
@@ -27,7 +27,7 @@
 namespace block_question_report\privacy;
 
 /**
- * Privacy Subsystem for report_matrixreport implementing null_provider.
+ * Privacy Subsystem for block_question_report implementing null_provider.
  *
  * @copyright  2018 Zig Tan <zig@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

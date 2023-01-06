@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template block_question_report/overview
+    @template block_question_report/attempt
 }}
 
 <div>
@@ -64,14 +64,14 @@
                     {{feedback}}
                 </td>
                 <td>
-                    <div class="progressbar" style="display: inline-block; width: 100px; border-radius: 10px; background-color: lightgrey;">
-                        <div style="width: {{percentage}}%; border-radius: 10px;  height: 30px; background-color: {{color}}">
+                    <div class="progressbar">
+                        <div class="progress" style="width: {{percentage}}%; background-color: {{color}}">
                         </div>
                     </div>
                 </td>
                 <td>
-                    <div class="progressbar" style="display: inline-block; width: 100px; border-radius: 10px; background-color: lightgrey;">
-                        <div style="width: {{avg}}%; border-radius: 10px;  height: 30px; background-color: {{avgcolor}}">
+                    <div class="progressbar">
+                        <div class="progress" style="width: {{avg}}%; background-color: {{avgcolor}}">
                         </div>
                     </div>
                 </td>
@@ -89,14 +89,14 @@
                         {{feedback}}
                     </td>
                     <td>
-                        <div class="progressbar" style="display: inline-block; width: 100px; border-radius: 10px; background-color: lightgrey;">
-                            <div style="width: {{percentage}}%; border-radius: 10px;  height: 30px; background-color: {{color}}">
+                        <div class="progressbar">
+                            <div class="progress" style="width: {{percentage}}%; background-color: {{color}}">
                             </div>
                         </div>
                     </td>
                     <td>
-                        <div class="progressbar" style="display: inline-block; width: 100px; border-radius: 10px; background-color: lightgrey;">
-                            <div style="width: {{avg}}%; border-radius: 10px;  height: 30px; background-color: {{avgcolor}}">
+                        <div class="progressbar">
+                            <div class="progress" style="width: {{avg}}%; background-color: {{avgcolor}}">
                             </div>
                         </div>
                     </td>

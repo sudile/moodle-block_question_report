@@ -42,13 +42,12 @@ require_login($course);
 $context = context_course::instance($course->id);
 $PAGE->set_context($context);
 
-echo $OUTPUT->header();
 $renderer = $PAGE->get_renderer('block_question_report');
 if ($cmid === 0) {
     $helper = new quiz_helper($course->id);
     $overview = new overview();
     $overview->set_quiz_list($helper->get_quiz_list());
-    echo $renderer->render_overview($overview);
+    $renderer->render_overview($overview);
 } else {
     global $USER, $CFG, $DB;
     require_once($CFG->dirroot . '/mod/quiz/lib.php');
@@ -77,8 +76,10 @@ if ($cmid === 0) {
 
         $result = util::load_attempt($cm->instance, $attemptobj->uniqueid);
         $attemptview->set_result($result);
-        echo $renderer->render_attempt($attemptview);
+        $renderer->render_attempt($attemptview);
+    } else {
+        $renderer->render_noattempt($cm->name, $course->id);
     }
 }
 
-echo $OUTPUT->footer();
+

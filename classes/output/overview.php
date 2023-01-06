@@ -17,7 +17,7 @@
 /**
  * Contains class overview
  *
- * @package    report_matrixreport
+ * @package    block_question_report
  * @copyright  2022 sudile GbR (http://www.sudile.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
