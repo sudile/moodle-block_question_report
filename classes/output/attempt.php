@@ -138,10 +138,10 @@ class attempt implements renderable, templatable {
         $groupseries = [];
         foreach ($rowmetrics as $label => $rowmetric) {
             $labels[] = $label;
-            $series[] = array_sum($rowmetric) / count($rowmetric);
+            $series[] = round(array_sum($rowmetric) / count($rowmetric) * 100,2);
         }
         foreach ($rowgroupmetrics as $rowgroupmetric) {
-            $groupseries[] = array_sum($rowgroupmetric) / count($rowgroupmetric);
+            $groupseries[] = round(array_sum($rowgroupmetric) / count($rowgroupmetric) * 100,2);
         }
         $chart = new chart_bar();
         $chart->add_series(new chart_series(get_string('user', 'block_question_report'), $series));
