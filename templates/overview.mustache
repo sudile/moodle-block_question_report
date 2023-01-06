@@ -20,14 +20,22 @@
 
 <div>
     <h2>{{coursename}}</h2>
-    {{#quizzes}}
-        <a href="{{{url}}}">
-            <div class="name">
-                {{name}}
-            </div>
-            <div class="description">
-                {{{description}}}
-            </div>
-        </a>
-    {{/quizzes}}
+    <div class="container">
+        {{#quizzes}}
+            <a href="{{{url}}}">
+                <div class="row">
+                    <div class="col-1 name">
+                        {{#pix}}icon, mod_quiz{{/pix}}
+                    </div>
+                    <div class="col name">
+                        {{name}}
+                        <div class="description">
+                            {{{description}}}
+                        </div>
+                    </div>
+
+                </div>
+            </a>
+        {{/quizzes}}
+    </div>
 </div>

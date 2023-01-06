@@ -26,6 +26,11 @@
 
 namespace block_question_report;
 
+use block_question_report\pod\matrix_row;
+use block_question_report\pod\result_entry;
+use qtype_matrix_question;
+use question_engine;
+
 class util {
 
     /**
@@ -57,5 +62,49 @@ class util {
             return get_string('default_below_87', 'block_question_report');
         }
         return get_string('default_below_100', 'block_question_report');
+    }
+
+    public static function get_quiz_users(int $quizid): array {
+        global $DB;
+        return array_values($DB->get_fieldset_sql('SELECT userid FROM {quiz_attempts} WHERE quiz = ? GROUP BY userid',
+            [$quizid]));
+    }
+
+    public static function load_attempt(int $quizid, int $uniqueid): array {
+        global $CFG;
+        $x = question_engine::load_questions_usage_by_activity($uniqueid);
+        $result = [];
+        foreach ($x->get_slots() as $slot) {
+            $questionattempt = $x->get_question_attempt($slot);
+            $question = $questionattempt->get_question();
+            $subpoints = [];
+            if ($question->get_type_name() == 'matrix') {
+                require_once($CFG->dirroot . '/question/type/matrix/question.php');
+                if ($question instanceof qtype_matrix_question) {
+                    $grading = $question->grading();
+                    $data = $questionattempt->get_steps_with_submitted_response_iterator()->current()->get_all_data();
+                    foreach ($question->rows as $row) {
+                        $fraction = $grading->grade_row($question, $row, $data);
+                        $subpoints[] = new matrix_row(
+                            $fraction,
+                            $row->shorttext,
+                            util::feedback_for_grade($quizid, $fraction)
+                        );
+                    }
+                }
+            }
+            $fraction = $questionattempt->get_fraction();
+            if ($fraction === null) {
+                continue;
+            }
+            $result[] = new result_entry(
+                $slot,
+                $fraction,
+                $question->name,
+                util::feedback_for_grade($quizid, $fraction),
+                $subpoints
+            );
+        }
+        return $result;
     }
 }

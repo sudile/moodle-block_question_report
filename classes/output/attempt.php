@@ -26,6 +26,7 @@
 namespace block_question_report\output;
 
 
+use block_question_report\pod\result_entry;
 use renderable;
 use renderer_base;
 use templatable;
@@ -58,6 +59,10 @@ class attempt implements renderable, templatable {
         $this->cm = $cm;
     }
 
+    /**
+     * @param result_entry[] $result
+     * @return void
+     */
     public function set_result(array $result): void {
         $this->result = $result;
     }
@@ -79,22 +84,26 @@ class attempt implements renderable, templatable {
             ];
         }
         foreach ($this->result as $result) {
-            if ($result['fraction'] >= 1) {
-                $result['fraction'] = 1;
+            $output = [];
+            foreach ($result->subpoints as $subpoint) {
+                $output[] = [
+                    'name' => $subpoint->name,
+                    'color' => $this->make_color(1 - $subpoint->fraction),
+                    'percentage' => $subpoint->fraction * 100,
+                    'fraction' => round($subpoint->fraction * 100, 2) . '%'
+                ];
             }
-            foreach ($result['subpoints'] as &$subpoint) {
-                $subpoint['color'] = $this->make_color(1 - $subpoint['fraction']);
-                $subpoint['percentage'] = $subpoint['fraction'] * 100;
-                $subpoint['fraction'] = round($subpoint['fraction'] * 100, 2) . '%';
+            if ($result->fraction >= 1) {
+                $result->fraction = 1;
             }
             $data['results'][] = [
-                'id' => $result['id'],
-                'name' => $result['name'],
-                'feedback' => $result['feedback'],
-                'subpoints' => $result['subpoints'],
-                'fraction' => round($result['fraction'] * 100, 2) . '%',
-                'color' => $this->make_color(1 - $result['fraction']),
-                'percentage' => $result['fraction'] * 100
+                'id' => $result->id,
+                'name' => $result->name,
+                'feedback' => $result->feedback,
+                'subpoints' => $output,
+                'fraction' => round($result->fraction * 100, 2) . '%',
+                'color' => $this->make_color(1 - $result->fraction),
+                'percentage' => $result->fraction * 100
             ];
         }
         return $data;

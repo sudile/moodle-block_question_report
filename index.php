@@ -70,39 +70,11 @@ if ($cmid === 0) {
             $attemptview->set_current_attempt($attempts[count($attempts) - 1]);
         }
         $attemptobj = $attemptview->get_current_attempt();
-        $x = question_engine::load_questions_usage_by_activity($attemptobj->uniqueid);
-        $result = [];
-        foreach ($x->get_slots() as $slot) {
-            $questionattempt = $x->get_question_attempt($slot);
-            $question = $questionattempt->get_question();
-            $subpoints = [];
-            if ($question->get_type_name() == 'matrix') {
-                require_once($CFG->dirroot . '/question/type/matrix/question.php');
-                if ($question instanceof qtype_matrix_question) {
-                    $grading = $question->grading();
-                    $data = $questionattempt->get_steps_with_submitted_response_iterator()->current()->get_all_data();
-                    foreach ($question->rows as $row) {
-                        $fraction = $grading->grade_row($question, $row, $data);
-                        $subpoints[] = [
-                            'name' => $row->shorttext,
-                            'fraction' => $fraction,
-                            'feedback' => util::feedback_for_grade($cm->instance, $fraction)
-                        ];
-                    }
-                }
-            }
-            $fraction = $questionattempt->get_fraction();
-            if ($fraction === null) {
-                continue;
-            }
-            $result[] = [
-                'id' => $slot,
-                'fraction' => $fraction,
-                'name' => $question->name,
-                'feedback' => util::feedback_for_grade($cm->instance, $fraction),
-                'subpoints' => $subpoints
-            ];
-        }
+
+        // Todo: Load user to fetch the attempts for them
+        $users = util::get_quiz_users($cm->instance); // Todo: Should the current user be added to the group result?
+        $result = util::load_attempt($cm->instance, $attemptobj->uniqueid);
+
         $attemptview->set_result($result);
         echo $renderer->render_attempt($attemptview);
     }
