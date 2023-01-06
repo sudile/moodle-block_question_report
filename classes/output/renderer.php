@@ -58,6 +58,7 @@ class renderer extends \plugin_renderer_base {
      */
     public function render_attempt(attempt $attempt) {
         $data = $attempt->export_for_template($this);
+        $data['chart'] = $this->render($data['chart']);
         return $this->render_from_template('block_question_report/attempt', $data);
     }
 }

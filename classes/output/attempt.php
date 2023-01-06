@@ -138,18 +138,17 @@ class attempt implements renderable, templatable {
         $groupseries = [];
         foreach ($rowmetrics as $label => $rowmetric) {
             $labels[] = $label;
-            $series[] = round(array_sum($rowmetric) / count($rowmetric) * 100,2);
+            $series[] = round(array_sum($rowmetric) / count($rowmetric) * 100, 2);
         }
         foreach ($rowgroupmetrics as $rowgroupmetric) {
-            $groupseries[] = round(array_sum($rowgroupmetric) / count($rowgroupmetric) * 100,2);
+            $groupseries[] = round(array_sum($rowgroupmetric) / count($rowgroupmetric) * 100, 2);
         }
         $chart = new chart_bar();
         $chart->add_series(new chart_series(get_string('user', 'block_question_report'), $series));
         $chart->add_series(new chart_series(get_string('group', 'block_question_report'), $groupseries));
         $chart->set_labels($labels);
-        $chart->set_legend_options(['position' => 'bottom']);  // Change legend position to left side.
-        global $OUTPUT;
-        $data['chart'] = $OUTPUT->render($chart);
+        $chart->set_legend_options(['position' => 'bottom']);
+        $data['chart'] = $chart;
         return $data;
     }
 
