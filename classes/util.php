@@ -28,8 +28,11 @@ namespace block_question_report;
 
 use block_question_report\pod\matrix_row;
 use block_question_report\pod\result_entry;
+use coding_exception;
+use dml_exception;
 use qtype_matrix_question;
 use question_engine;
+use quiz_attempt;
 
 class util {
     private static $attempts = [];
@@ -40,8 +43,8 @@ class util {
      * @param int   $quizid
      * @param float $grade
      * @return string
-     * @throws \coding_exception
-     * @throws \dml_exception
+     * @throws coding_exception
+     * @throws dml_exception
      */
     public static function feedback_for_grade(int $quizid, float $grade): string {
         global $DB;
@@ -65,13 +68,33 @@ class util {
         return get_string('default_below_100', 'block_question_report');
     }
 
+    /**
+     * Get all users who have submitted attempts which are FINISHED or ABANDONED
+     *
+     * @param int $quizid
+     * @return array
+     * @throws dml_exception
+     */
     public static function get_quiz_users(int $quizid): array {
         global $DB;
-        return array_values($DB->get_fieldset_sql('SELECT userid FROM {quiz_attempts} WHERE quiz = ? GROUP BY userid',
-            [$quizid]));
+        return array_values(
+            $DB->get_fieldset_sql(
+                'SELECT userid FROM {quiz_attempts} WHERE quiz = :quizid AND state IN (:state1, :state2) GROUP BY userid',
+                ['quizid' => $quizid, 'state1' => quiz_attempt::FINISHED, 'state2' => quiz_attempt::ABANDONED]
+            )
+        );
     }
 
 
+    /**
+     * Average over all attempts over a quiz with a given user list
+     *
+     * @param int   $quizid
+     * @param array $userids
+     * @return array
+     * @throws coding_exception
+     * @throws dml_exception
+     */
     public static function average_users_attempts(int $quizid, array $userids): array {
         $map = [];
         $rowmap = [];
@@ -90,22 +113,18 @@ class util {
                 $rowmap[$rowid][] = $fraction;
             }
         }
-        $result = ['map' => [], 'rowmap' => []];
-        foreach ($map as $questionid => $fractions) {
-            $result['map'][$questionid] = array_sum($fractions) / count($fractions);
-        }
-        foreach ($rowmap as $rowid => $fractions) {
-            $result['rowmap'][$rowid] = array_sum($fractions) / count($fractions);
-        }
-        return $result;
+        return self::avg_array($map, $rowmap);
     }
 
     /**
+     * Average over user attempts, only used by average_users_attempts
+     *
      * @param int $quizid
      * @param int $userid
      * @return array
-     * @throws \coding_exception
-     * @throws \dml_exception
+     * @throws coding_exception
+     * @throws dml_exception
+     * @see average_users_attempts
      */
     private static function average_user_attempts(int $quizid, int $userid): array {
         $attempts = array_values(quiz_get_user_attempts([$quizid], $userid));
@@ -115,7 +134,7 @@ class util {
         $map = [];
         $rowmap = [];
         foreach ($attempts as $attemptobj) {
-            $attempt = util::load_attempt($quizid, $attemptobj->uniqueid);
+            $attempt = self::load_attempt($quizid, $attemptobj->uniqueid);
             foreach ($attempt as $result) {
                 if (!isset($map[$result->questionid])) {
                     $map[$result->questionid] = [];
@@ -129,6 +148,10 @@ class util {
                 }
             }
         }
+        return self::avg_array($map, $rowmap);
+    }
+
+    private static function avg_array(array $map, array $rowmap): array {
         $result = ['map' => [], 'rowmap' => []];
         foreach ($map as $questionid => $fractions) {
             $result['map'][$questionid] = array_sum($fractions) / count($fractions);
@@ -143,11 +166,10 @@ class util {
      * @param int $quizid
      * @param int $uniqueid
      * @return result_entry[]
-     * @throws \coding_exception
-     * @throws \dml_exception
+     * @throws coding_exception
+     * @throws dml_exception
      */
     public static function load_attempt(int $quizid, int $uniqueid): array {
-        global $CFG;
         if (isset(self::$attempts[$quizid . '-' . $uniqueid])) {
             return self::$attempts[$quizid . '-' . $uniqueid];
         }
@@ -158,7 +180,6 @@ class util {
             $question = $questionattempt->get_question();
             $subpoints = [];
             if ($question->get_type_name() == 'matrix') {
-                require_once($CFG->dirroot . '/question/type/matrix/question.php');
                 if ($question instanceof qtype_matrix_question) {
                     $grading = $question->grading();
                     $data = $questionattempt->get_steps_with_submitted_response_iterator()->current()->get_all_data();
@@ -168,7 +189,7 @@ class util {
                             $row->id,
                             $fraction,
                             $row->shorttext,
-                            util::feedback_for_grade($quizid, $fraction)
+                            self::feedback_for_grade($quizid, $fraction)
                         );
                     }
                 }
@@ -181,7 +202,7 @@ class util {
                 $slot,
                 $fraction,
                 $question->name,
-                util::feedback_for_grade($quizid, $fraction),
+                self::feedback_for_grade($quizid, $fraction),
                 $question->id,
                 $subpoints,
             );

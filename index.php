@@ -71,8 +71,7 @@ if ($cmid === 0) {
         }
         $attemptobj = $attemptview->get_current_attempt();
 
-        // Todo: Load user to fetch the attempts for them
-        $users = util::get_quiz_users($cm->instance); // Todo: Should the current user be added to the group result?
+        $users = util::get_quiz_users($cm->instance);
         $averageattempt = util::average_users_attempts($cm->instance, $users);
         $attemptview->set_averageresult($averageattempt);
 

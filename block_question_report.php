@@ -45,7 +45,7 @@ class block_question_report extends block_base {
         $this->content = new stdClass();
         $this->content->text = html_writer::link(new moodle_url('/blocks/question_report/index.php',
             ['id' => $COURSE->id]),
-            get_string('reports', 'block_question_report'));
+            get_string('reports', 'block_question_report'), ['class' => 'btn btn-primary']);
         $this->content->footer = '';
         return $this->content;
     }

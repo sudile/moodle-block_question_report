@@ -20,14 +20,14 @@
 
 <div>
     <h2>{{quizname}}</h2>
-    <div>
-        <div>
-            <a href="{{{back}}}">
+    <div class="mb-2">
+        <div class="mb-1">
+            <a class="btn btn-secondary" href="{{{back}}}">
                 {{#str}}back, block_question_report{{/str}}
             </a>
         </div>
         {{#attempts}}
-            <a href="{{{url}}}" class="mr-1" style="{{#active}}background-color: red;{{/active}}">
+            <a href="{{{url}}}" class="mr-1 btn {{#active}}btn-primary{{/active}}{{^active}}btn-secondary{{/active}}">
             <span class="name">
                 {{id}}
             </span>
