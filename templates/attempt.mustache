@@ -37,6 +37,12 @@
 
     <div>
         {{{chart}}}
+        {{#chart}}
+            <button class="btn btn-secondary" id="download-graph" data-name="{{quizname}}"
+                    data-attemptid="{{attemptid}}">
+                {{#str}} download, block_question_report{{/str}}
+            </button>
+        {{/chart}}
     </div>
 
     <table class="table">

@@ -59,6 +59,7 @@ class renderer extends \plugin_renderer_base {
      */
     public function render_attempt(attempt $attempt) {
         $this->page->requires->css('/blocks/question_report/styles/attempt.css');
+        $this->page->requires->js_call_amd('block_question_report/canvastoimage', 'init', []);
         echo $this->output->header();
         $data = $attempt->export_for_template($this);
         $data['chart'] = $this->render($data['chart']);

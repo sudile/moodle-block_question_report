@@ -31,6 +31,7 @@ $string['back'] = 'Back to selection';
 $string['group'] = 'Group';
 $string['user'] = 'User';
 
+$string['download'] = 'Download';
 $string['default_below_50'] = 'not sufficient';
 $string['default_below_57'] = 'sufficient';
 $string['default_below_72'] = 'satisfying';

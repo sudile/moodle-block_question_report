@@ -91,7 +91,8 @@ class attempt implements renderable, templatable {
             'quizname' => $this->cm->name,
             'attempts' => [],
             'results' => [],
-            'back' => new moodle_url('/blocks/question_report/index.php', ['id' => $this->course->id])
+            'back' => new moodle_url('/blocks/question_report/index.php', ['id' => $this->course->id]),
+            'attemptid' => $this->attempt->id
         ];
         foreach ($this->attempts as $attempt) {
             $data['attempts'][] = [
@@ -143,12 +144,14 @@ class attempt implements renderable, templatable {
         foreach ($rowgroupmetrics as $rowgroupmetric) {
             $groupseries[] = round(array_sum($rowgroupmetric) / count($rowgroupmetric) * 100, 2);
         }
-        $chart = new chart_bar();
-        $chart->add_series(new chart_series(get_string('user', 'block_question_report'), $series));
-        $chart->add_series(new chart_series(get_string('group', 'block_question_report'), $groupseries));
-        $chart->set_labels($labels);
-        $chart->set_legend_options(['position' => 'bottom']);
-        $data['chart'] = $chart;
+        if (count($groupseries) > 0) {
+            $chart = new chart_bar();
+            $chart->add_series(new chart_series(get_string('user', 'block_question_report'), $series));
+            $chart->add_series(new chart_series(get_string('group', 'block_question_report'), $groupseries));
+            $chart->set_labels($labels);
+            $chart->set_legend_options(['position' => 'bottom']);
+            $data['chart'] = $chart;
+        }
         return $data;
     }
 
