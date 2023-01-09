@@ -115,6 +115,7 @@ class attempt implements renderable, templatable {
                     'color' => $this->make_color(1 - $matrixrow->fraction),
                     'percentage' => $matrixrow->fraction * 100,
                     'fraction' => round($matrixrow->fraction * 100, 2) . '%',
+                    'feedback' => $matrixrow->feedback,
                     'avg' => $this->averageresult['rowmap'][$matrixrow->id] * 100,
                     'avgcolor' => $this->make_color(1 - $this->averageresult['rowmap'][$matrixrow->id])
                 ];
