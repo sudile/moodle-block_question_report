@@ -39,7 +39,7 @@ class attempt implements renderable, templatable {
 
     private $attempt = null;
     private $attempts = [];
-    private $course = null;
+    private $blockinstance;
     private $cm = null;
     /**
      * @var result_entry[]
@@ -59,8 +59,8 @@ class attempt implements renderable, templatable {
         $this->attempts = $attempts;
     }
 
-    public function set_course(object $course): void {
-        $this->course = $course;
+    public function set_blockinstance(int $blockinstance): void {
+        $this->blockinstance = $blockinstance;
     }
 
     public function set_cm(object $cm): void {
@@ -87,18 +87,37 @@ class attempt implements renderable, templatable {
      * @throws moodle_exception
      */
     public function export_for_template(renderer_base $output): array {
+        global $DB;
+        $block = $DB->get_field('block_instances', 'configdata', ['id' => $this->blockinstance],  MUST_EXIST);
+        $configdata = unserialize_object(base64_decode($block));
+        $configdata->text = file_rewrite_pluginfile_urls(
+            $configdata->text,
+            'pluginfile.php',
+            \context_block::instance($this->blockinstance)->id,
+            'block_question_report',
+            'content',
+            null);
+        $format = FORMAT_HTML;
+        // Check to see if the format has been properly set on the config
+        if (isset($configdata->format)) {
+            $format = $configdata->format;
+        }
+        $filteropt = new \stdClass();
+        $filteropt->overflowdiv = true;
+        $configdata->text = format_text($configdata->text, $format, $filteropt);
         $data = [
             'quizname' => $this->cm->name,
             'attempts' => [],
             'results' => [],
-            'back' => new moodle_url('/blocks/question_report/index.php', ['id' => $this->course->id]),
-            'attemptid' => $this->attempt->id
+            'back' => new moodle_url('/blocks/question_report/index.php', ['id' => $this->blockinstance]),
+            'attemptid' => $this->attempt->id,
+            'contenthelp' => $configdata->text
         ];
         foreach ($this->attempts as $attempt) {
             $data['attempts'][] = [
                 'id' => $attempt->attempt,
                 'url' => new moodle_url('/blocks/question_report/index.php',
-                    ['id' => $this->course->id, 'cmid' => $this->cm->id, 'attempt' => $attempt->id]),
+                    ['id' => $this->blockinstance, 'cmid' => $this->cm->id, 'attempt' => $attempt->id]),
                 'date' => usertime($attempt->timefinish),
                 'active' => $attempt->id == $this->attempt->id
             ];

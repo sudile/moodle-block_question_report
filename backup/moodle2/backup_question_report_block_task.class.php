@@ -15,8 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version info
- *
  * @package    block
  * @subpackage question_report
  * @copyright  2022 sudile GbR (http://www.sudile.com)
@@ -24,8 +22,28 @@
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
  */
 
-defined('MOODLE_INTERNAL') || die;
+/**
+ * Specialised backup task for the question_report block
+ * (requires encode_content_links in some configdata attrs)
+ */
+class backup_question_report_block_task extends backup_block_task {
 
-$plugin->version = 2023010402;       // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires = 2022111800;       // Requires this Moodle version.
-$plugin->component = 'block_question_report'; // Full name of the plugin (used for diagnostics).
+    protected function define_my_settings(): void {
+    }
+
+    protected function define_my_steps(): void {
+    }
+
+    public function get_fileareas(): array {
+        return ['content'];
+    }
+
+    public function get_configdata_encoded_attributes(): array {
+        return ['text']; // We need to encode some attrs in configdata
+    }
+
+    static public function encode_content_links($content) {
+        return $content; // No special encoding of links
+    }
+}
+

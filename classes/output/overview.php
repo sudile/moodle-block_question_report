@@ -45,7 +45,7 @@ class overview implements renderable, templatable {
     }
 
     public function export_for_template(renderer_base $output): array {
-        global $COURSE;
+        global $PAGE, $COURSE;
         $data = [
             'quizzes' => [],
             'coursename' => $COURSE->fullname
@@ -54,7 +54,7 @@ class overview implements renderable, templatable {
             $data['quizzes'][] = [
                 'name' => $quiz->get_name(),
                 'url' => new \moodle_url('/blocks/question_report/index.php',
-                    ['id' => $COURSE->id, 'cmid' => $quiz->id]),
+                    ['id' => $PAGE->context->id, 'cmid' => $quiz->id]),
                 'description' => $quiz->content,
             ];
         }

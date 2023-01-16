@@ -35,12 +35,17 @@ require('../../config.php');
 $id = required_param('id', PARAM_INT);
 $cmid = optional_param('cmid', 0, PARAM_INT);
 $attempt = optional_param('attempt', 0, PARAM_INT);
-$course = get_course($id);
+
+$contextcourse = context::instance_by_id($id);
+if (!($contextcourse instanceof context_course)) {
+    throw new moodle_exception('invalidcontext');
+}
+
+$course = get_course($contextcourse->instanceid);
 
 $PAGE->set_url(new moodle_url('/blocks/question_report/index.php'));
 require_login($course);
-$context = context_course::instance($course->id);
-$PAGE->set_context($context);
+$PAGE->set_context($contextcourse);
 
 $renderer = $PAGE->get_renderer('block_question_report');
 if ($cmid === 0) {
@@ -51,13 +56,14 @@ if ($cmid === 0) {
 } else {
     global $USER, $CFG, $DB;
     require_once($CFG->dirroot . '/mod/quiz/lib.php');
-    $cm = get_coursemodule_from_id('quiz', $cmid, $course->id, false, MUST_EXIST);
+    $minfo = get_fast_modinfo($course->id);
+    $cm = $minfo->get_cm($cmid);
     $attempts = array_values(quiz_get_user_attempts([$cm->instance], $USER->id));
-    if (count($attempts) !== 0) {
+    if (count($attempts) !== 0 && $cm->uservisible) {
         $context = context_module::instance($cm->id);
         $attemptview = new attempt();
         $attemptview->set_cm($cm);
-        $attemptview->set_course($course);
+        $attemptview->set_blockinstance($contextcourse->id);
         $attemptview->set_attempts($attempts);
         foreach ($attempts as $attemptobj) {
             if ($attemptobj->id == $attempt) {
@@ -78,7 +84,7 @@ if ($cmid === 0) {
         $attemptview->set_result($result);
         $renderer->render_attempt($attemptview);
     } else {
-        $renderer->render_noattempt($cm->name, $course->id);
+        $renderer->render_noattempt($cm->name, $contextcourse->id);
     }
 }
 

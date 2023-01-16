@@ -43,3 +43,10 @@ $string['table_percentage'] = 'Percentage';
 $string['table_feedback'] = 'Feedback';
 $string['table_progress'] = 'Progress';
 $string['table_avgprogress'] = 'Group Progress';
+
+$string['config_content'] = 'Explanation';
+$string['config_data_visibility'] = 'Data visibility';
+
+$string['data_visibility_all'] = 'Show all';
+$string['data_visibility_diagram'] = 'Only diagram';
+$string['data_visibility_table'] = 'Only table';
