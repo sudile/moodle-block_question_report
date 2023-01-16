@@ -88,8 +88,14 @@ class attempt implements renderable, templatable {
      */
     public function export_for_template(renderer_base $output): array {
         global $DB;
-        $block = $DB->get_field('block_instances', 'configdata', ['id' => $this->blockinstance],  MUST_EXIST);
+        $block = $DB->get_field('block_instances', 'configdata', ['id' => $this->blockinstance], MUST_EXIST);
         $configdata = unserialize_object(base64_decode($block));
+        if (empty($configdata->text)) {
+            $configdata->text = '';
+        }
+        if (empty($configdata->data_visibility)) {
+            $configdata->data_visibility = 1;
+        }
         $configdata->text = file_rewrite_pluginfile_urls(
             $configdata->text,
             'pluginfile.php',
@@ -111,7 +117,9 @@ class attempt implements renderable, templatable {
             'results' => [],
             'back' => new moodle_url('/blocks/question_report/index.php', ['id' => $this->blockinstance]),
             'attemptid' => $this->attempt->id,
-            'contenthelp' => $configdata->text
+            'contenthelp' => $configdata->text,
+            'chartvisible' => $configdata->data_visibility != 3,
+            'tablevisible' => $configdata->data_visibility != 2
         ];
         foreach ($this->attempts as $attempt) {
             $data['attempts'][] = [
