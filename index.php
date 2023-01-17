@@ -33,7 +33,7 @@ use block_question_report\util;
 require('../../config.php');
 
 $id = required_param('id', PARAM_INT);
-$cmid = optional_param('cmid', 0, PARAM_INT);
+$cmid = required_param('cmid',  PARAM_INT);
 $attempt = optional_param('attempt', 0, PARAM_INT);
 
 $contextcourse = context::instance_by_id($id);
@@ -48,12 +48,7 @@ require_login($course);
 $PAGE->set_context($contextcourse);
 
 $renderer = $PAGE->get_renderer('block_question_report');
-if ($cmid === 0) {
-    $helper = new quiz_helper($course->id);
-    $overview = new overview();
-    $overview->set_quiz_list($helper->get_quiz_list());
-    $renderer->render_overview($overview);
-} else {
+if ($cmid !== 0) {
     global $USER, $CFG, $DB;
     require_once($CFG->dirroot . '/mod/quiz/lib.php');
     $minfo = get_fast_modinfo($course->id);
@@ -84,7 +79,7 @@ if ($cmid === 0) {
         $attemptview->set_result($result);
         $renderer->render_attempt($attemptview);
     } else {
-        $renderer->render_noattempt($cm->name, $contextcourse->id);
+        $renderer->render_noattempt($cm->name, $cm->course);
     }
 }
 

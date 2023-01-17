@@ -42,13 +42,12 @@ class renderer extends \plugin_renderer_base {
      * Render quiz instance overview
      *
      * @param overview $overview
+     * @return bool|string
      * @throws moodle_exception
      */
-    public function render_overview(overview $overview) {
-        echo $this->output->header();
+    public function render_overview(overview $overview) : string {
         $data = $overview->export_for_template($this);
-        echo $this->render_from_template('block_question_report/overview', $data);
-        echo $this->output->footer();
+        return $this->render_from_template('block_question_report/overview', $data);
     }
 
     /**
@@ -77,7 +76,7 @@ class renderer extends \plugin_renderer_base {
         echo $this->render_from_template('block_question_report/noattempt',
             [
                 'quizname' => $name,
-                'back' => new moodle_url('/blocks/question_report/index.php', ['id' => $courseid])
+                'back' => new moodle_url('/course/view.php', ['id' => $courseid])
             ]);
         echo $this->output->footer();
     }

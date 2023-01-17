@@ -36,6 +36,8 @@ class overview implements renderable, templatable {
      */
     private $quizlist;
 
+    private $instanceid;
+
     /**
      * @param \cm_info[] $quizlist
      * @return void
@@ -44,17 +46,23 @@ class overview implements renderable, templatable {
         $this->quizlist = $quizlist;
     }
 
+    /**
+     * @param int $instanceid
+     * @return void
+     */
+    public function set_instanceid(int $instanceid) {
+        $this->instanceid = $instanceid;
+    }
+
     public function export_for_template(renderer_base $output): array {
-        global $PAGE, $COURSE;
         $data = [
-            'quizzes' => [],
-            'coursename' => $COURSE->fullname
+            'quizzes' => []
         ];
         foreach ($this->quizlist as $quiz) {
             $data['quizzes'][] = [
                 'name' => $quiz->get_name(),
                 'url' => new \moodle_url('/blocks/question_report/index.php',
-                    ['id' => $PAGE->context->id, 'cmid' => $quiz->id]),
+                    ['id' => $this->instanceid, 'cmid' => $quiz->id]),
                 'description' => $quiz->content,
             ];
         }

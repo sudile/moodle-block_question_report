@@ -115,7 +115,7 @@ class attempt implements renderable, templatable {
             'quizname' => $this->cm->name,
             'attempts' => [],
             'results' => [],
-            'back' => new moodle_url('/blocks/question_report/index.php', ['id' => $this->blockinstance]),
+            'back' => new moodle_url('/course/view.php', ['id' => $this->cm->course]),
             'attemptid' => $this->attempt->id,
             'contenthelp' => $configdata->text,
             'chartvisible' => $configdata->data_visibility != 3,

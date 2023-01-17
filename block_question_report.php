@@ -13,6 +13,8 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+use block_question_report\output\overview;
+use block_question_report\quiz_helper;
 
 /**
  * Question report block.
@@ -45,14 +47,17 @@ class block_question_report extends block_base {
     }
 
     public function get_content(): object {
+        global $COURSE;
         if ($this->content !== null) {
             return $this->content;
         }
+        $renderer = $this->page->get_renderer('block_question_report');
+        $helper = new quiz_helper($COURSE->id);
+        $overview = new overview();
+        $overview->set_quiz_list($helper->get_quiz_list());
+        $overview->set_instanceid($this->instance->id);
         $this->content = new stdClass();
-        $this->content->text = html_writer::link(new moodle_url('/blocks/question_report/index.php',
-            ['id' => $this->instance->id]),
-            new lang_string('reports', 'block_question_report'),
-            ['class' => 'btn btn-primary']);
+        $this->content->text = $renderer->render_overview($overview);
         $this->content->footer = '';
         return $this->content;
     }
