@@ -26,22 +26,17 @@
 
 
 use block_question_report\output\attempt;
-use block_question_report\output\overview;
-use block_question_report\quiz_helper;
 use block_question_report\util;
 
 require('../../config.php');
 
 $id = required_param('id', PARAM_INT);
-$cmid = required_param('cmid',  PARAM_INT);
+$cmid = required_param('cmid', PARAM_INT);
 $attempt = optional_param('attempt', 0, PARAM_INT);
 
-$contextcourse = context::instance_by_id($id);
-if (!($contextcourse instanceof context_course)) {
-    throw new moodle_exception('invalidcontext');
-}
+$contextcourse = context_block::instance($id);
 
-$course = get_course($contextcourse->instanceid);
+$course = get_course($contextcourse->get_parent_context()->instanceid);
 
 $PAGE->set_url(new moodle_url('/blocks/question_report/index.php'));
 require_login($course);
