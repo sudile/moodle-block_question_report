@@ -129,7 +129,7 @@ class util {
     private static function average_user_attempts(int $quizid, int $userid): array {
         $attempts = array_values(quiz_get_user_attempts([$quizid], $userid));
         if (count($attempts) === 0) {
-            return [];
+            return ['map' => [], 'rowmap' => []];
         }
         $map = [];
         $rowmap = [];

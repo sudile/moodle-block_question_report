@@ -53,7 +53,7 @@ if ($cmid !== 0) {
         $context = context_module::instance($cm->id);
         $attemptview = new attempt();
         $attemptview->set_cm($cm);
-        $attemptview->set_blockinstance($contextcourse->id);
+        $attemptview->set_blockinstance($id);
         $attemptview->set_attempts($attempts);
         foreach ($attempts as $attemptobj) {
             if ($attemptobj->id == $attempt) {
