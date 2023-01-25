@@ -52,7 +52,7 @@ class util {
         $feedback = $DB->get_record_select('quiz_feedback',
             'quizid = ? AND mingrade <= ? AND ? < maxgrade',
             [$quizid, $grade, $grade]);
-        if ($feedback !== false) {
+        if ($feedback !== false && strip_tags($feedback->feedbacktext) !== "") {
             return strip_tags($feedback->feedbacktext);
         }
         // Use defaults.
