@@ -151,7 +151,6 @@ class attempt implements renderable, templatable {
                 $result->fraction = 1;
             }
             $data['results'][] = [
-                'id' => $result->id,
                 'name' => $result->name,
                 'feedback' => $result->feedback,
                 'subpoints' => $output,
@@ -174,8 +173,13 @@ class attempt implements renderable, templatable {
         }
         if (count($groupseries) > 0) {
             $chart = new chart_bar();
-            $chart->add_series(new chart_series(get_string('user', 'block_question_report'), $series));
-            $chart->add_series(new chart_series(get_string('group', 'block_question_report'), $groupseries));
+            $chart->set_horizontal(true);
+            $c1 = new chart_series(get_string('user', 'block_question_report'), $series);
+            $c1->set_color('#0992C3');
+            $c2 = new chart_series(get_string('group', 'block_question_report'), $groupseries);
+            $c2->set_color('#B1B1B1');
+            $chart->add_series($c1);
+            $chart->add_series($c2);
             $chart->set_labels($labels);
             $chart->set_legend_options(['position' => 'bottom']);
             $data['chart'] = $chart;

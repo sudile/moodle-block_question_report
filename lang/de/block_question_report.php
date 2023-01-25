@@ -27,9 +27,13 @@
 $string['pluginname'] = 'Fragebericht';
 $string['privacy:metadata'] = 'Das Plugin "Question report block" speichert keine persönlichen Daten.';
 $string['reports'] = 'Berichte ansehen';
-$string['back'] = 'Zurück zur Auswahl.';
+$string['back'] = 'Zurück zum Kurs';
 $string['group'] = 'Gruppe';
 $string['user'] = 'Benutzer';
+$string['view'] = 'Einsehen';
+$string['totalrating'] = 'Gesamtwertung';
+$string['partrating'] = 'Teil Bewertung';
+$string['attempts'] = 'Versuche';
 
 $string['download'] = 'Herunterladen';
 $string['default_below_50'] = 'nicht ausreichend';

@@ -19,22 +19,12 @@
 }}
 
 <div>
-    <div class="container">
-        {{#quizzes}}
+    {{#quizzes}}
+        <div>
+            <b>{{name}}</b> -
             <a href="{{{url}}}">
-                <div class="row">
-                    <div class="col-1 name">
-                        {{#pix}}icon, mod_quiz{{/pix}}
-                    </div>
-                    <div class="col name">
-                        {{name}}
-                        <div class="description">
-                            {{{description}}}
-                        </div>
-                    </div>
-
-                </div>
+                {{#str}}view, block_question_report{{/str}}
             </a>
-        {{/quizzes}}
-    </div>
+        </div>
+    {{/quizzes}}
 </div>

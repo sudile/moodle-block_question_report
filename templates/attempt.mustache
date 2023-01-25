@@ -18,102 +18,102 @@
     @template block_question_report/attempt
 }}
 
-<div>
+<div class="block_question_report">
     <h2>{{quizname}}</h2>
-    <div class="mb-2">
-        <div class="mb-1">
-            <a class="btn btn-secondary" href="{{{back}}}">
-                {{#str}}back, block_question_report{{/str}}
-            </a>
-        </div>
-        {{#attempts}}
-            <a href="{{{url}}}" class="mr-1 btn {{#active}}btn-primary{{/active}}{{^active}}btn-secondary{{/active}}">
+    <hr class="mt-2 mb-3 seperator">
+    <div>
+        <a class="btn btn-secondary" id="back-to-course" href="{{{back}}}">
+            {{#str}}back, block_question_report{{/str}}
+        </a>
+        {{{contenthelp}}}
+        <div class="clear-button"></div>
+    </div>
+    <hr class="mt-4 mb-2 seperator">
+    <h3 class="attempts">{{#str}}attempts, block_question_report{{/str}}:</h3>
+    {{#attempts}}
+        <a href="{{{url}}}" class="mr-1 btn {{#active}}btn-primary{{/active}}{{^active}}btn-secondary{{/active}}">
             <span class="name">
                 {{id}}
             </span>
-            </a>
-        {{/attempts}}
-    </div>
-    <div>
-        {{{contenthelp}}}
-    </div>
+        </a>
+    {{/attempts}}
+    <hr class="mt-2 mb-2 seperator">
     {{#chartvisible}}
-    <div>
-        {{{chart}}}
-        {{#chart}}
-            <button class="btn btn-secondary" id="download-graph" data-name="{{quizname}}"
-                    data-attemptid="{{attemptid}}">
-                {{#str}} download, block_question_report{{/str}}
-            </button>
-        {{/chart}}
-    </div>
+        <h3 class="totalrating">{{#str}}totalrating, block_question_report{{/str}}:</h3>
+        <div>
+            {{{chart}}}
+            {{#chart}}
+                <button class="btn btn-secondary" id="download-graph" data-name="{{quizname}}"
+                        data-attemptid="{{attemptid}}">
+                    {{#str}} download, block_question_report{{/str}}
+                </button>
+            {{/chart}}
+        </div>
     {{/chartvisible}}
     {{#tablevisible}}
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">{{#str}}table_name, block_question_report{{/str}}</th>
-            <th scope="col">{{#str}}table_percentage, block_question_report{{/str}}</th>
-            <th scope="col">{{#str}}table_feedback, block_question_report{{/str}}</th>
-            <th scope="col">{{#str}}table_progress, block_question_report{{/str}}</th>
-            <th scope="col">{{#str}}table_avgprogress, block_question_report{{/str}}</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#results}}
+        <h3 class="partrating {{^chartvisible}}extra-marging{{/chartvisible}}">{{#str}}partrating, block_question_report{{/str}}:</h3>
+        <table class="table">
+            <thead>
             <tr>
-                <th scope="row">{{id}}</th>
-                <td>
-                    {{name}}
-                </td>
-                <td>
-                    {{fraction}}
-                </td>
-                <td>
-                    {{feedback}}
-                </td>
-                <td>
-                    <div class="progressbar">
-                        <div class="progress" style="width: {{percentage}}%; background-color: {{color}}">
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="progressbar">
-                        <div class="progress" style="width: {{avg}}%; background-color: {{avgcolor}}">
-                        </div>
-                    </div>
-                </td>
+                <th scope="col">{{#str}}table_name, block_question_report{{/str}}</th>
+                <th scope="col">{{#str}}table_percentage, block_question_report{{/str}}</th>
+                <th scope="col">{{#str}}table_feedback, block_question_report{{/str}}</th>
+                <th scope="col">{{#str}}table_progress, block_question_report{{/str}}</th>
+                <th scope="col">{{#str}}table_avgprogress, block_question_report{{/str}}</th>
             </tr>
-            {{#subpoints}}
+            </thead>
+            <tbody>
+            {{#results}}
                 <tr>
-                    <th scope="row"></th>
                     <td>
-                        {{name}}
+                        <b>{{name}}</b>
                     </td>
                     <td>
-                        {{fraction}}
+                        <b>{{fraction}}</b>
                     </td>
                     <td>
-                        {{feedback}}
+                        <b>{{feedback}}</b>
                     </td>
                     <td>
                         <div class="progressbar">
-                            <div class="progress" style="width: {{percentage}}%; background-color: {{color}}">
+                            <div class="own-progress" style="width: {{percentage}}%; background-color: {{color}}">
                             </div>
                         </div>
                     </td>
                     <td>
                         <div class="progressbar">
-                            <div class="progress" style="width: {{avg}}%; background-color: {{avgcolor}}">
+                            <div class="own-progress" style="width: {{avg}}%; background-color: {{avgcolor}}">
                             </div>
                         </div>
                     </td>
                 </tr>
-            {{/subpoints}}
-        {{/results}}
-        </tbody>
-    </table>
+                {{#subpoints}}
+                    <tr>
+                        <td class="no-border">
+                            {{name}}
+                        </td>
+                        <td class="no-border">
+                            {{fraction}}
+                        </td>
+                        <td class="no-border">
+                            {{feedback}}
+                        </td>
+                        <td class="no-border">
+                            <div class="progressbar">
+                                <div class="own-progress" style="width: {{percentage}}%; background-color: {{color}}">
+                                </div>
+                            </div>
+                        </td>
+                        <td class="no-border">
+                            <div class="progressbar">
+                                <div class="own-progress" style="width: {{avg}}%; background-color: {{avgcolor}}">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {{/subpoints}}
+            {{/results}}
+            </tbody>
+        </table>
     {{/tablevisible}}
 </div>

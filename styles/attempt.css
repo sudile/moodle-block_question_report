@@ -1,11 +1,72 @@
-.progressbar {
-    display: inline-block;
-    width: 100px;
-    border-radius: 10px;
+.block_question_report .progressbar {
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+    width: 100%;
     background-color: lightgrey;
 }
 
-.progressbar .progress {
-    border-radius: 10px;
-    height: 1rem;
+.block_question_report .progressbar .own-progress {
+    height: 0.8rem;
+}
+
+.block_question_report .chart-area .chart-image {
+    width: 100% !important;
+    max-width: 900px;
+}
+
+.block_question_report .chart-area .chart-table-expand {
+    display: none;
+}
+
+.block_question_report #back-to-course,
+.block_question_report #download-graph {
+    float: right;
+}
+
+.block_question_report .no-overflow {
+    overflow: visible;
+}
+
+.block_question_report .attempts {
+    display: inline-block;
+    margin: 0 10px 0 0;
+    vertical-align: middle;
+}
+
+.block_question_report .btn.btn-primary {
+    background-color: #0992c3;
+    border-color: #0992c3;
+}
+
+.block_question_report .totalrating {
+    margin-top: 20px;
+}
+
+.block_question_report .partrating.extra-marging {
+    margin-top: 20px;
+}
+
+.block_question_report .partrating {
+    clear: both;
+}
+
+.block_question_report .seperator {
+    border-width: 2px;
+}
+
+.block_question_report .clear-button {
+    clear: both;
+}
+
+.block_question_report tbody td.no-border {
+    border-width: 0;
+}
+
+.block_question_report table.table {
+    table-layout: fixed;
+}
+
+.block_question_report .table tbody td {
+    padding-top: 0.15rem;
+    padding-bottom: 0.15rem;
 }
