@@ -41,17 +41,20 @@
     {{#chartvisible}}
         <h3 class="totalrating">{{#str}}totalrating, block_question_report{{/str}}:</h3>
         <div>
-            {{{chart}}}
             {{#chart}}
-                <button class="btn btn-secondary" id="download-graph" data-name="{{quizname}}"
-                        data-attemptid="{{attemptid}}">
-                    {{#str}} download, block_question_report{{/str}}
-                </button>
+                {{{chart}}}
+                {{#chart}}
+                    <button class="btn btn-secondary" id="download-graph" data-name="{{quizname}}"
+                            data-attemptid="{{attemptid}}">
+                        {{#str}} download, block_question_report{{/str}}
+                    </button>
+                {{/chart}}
             {{/chart}}
         </div>
     {{/chartvisible}}
     {{#tablevisible}}
-        <h3 class="partrating {{^chartvisible}}extra-marging{{/chartvisible}}">{{#str}}partrating, block_question_report{{/str}}:</h3>
+        <h3 class="partrating {{^chartvisible}}extra-marging{{/chartvisible}}">{{#str}}
+            partrating, block_question_report{{/str}}:</h3>
         <table class="table">
             <thead>
             <tr>
