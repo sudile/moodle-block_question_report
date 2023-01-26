@@ -56,13 +56,13 @@ class util {
             return strip_tags($feedback->feedbacktext);
         }
         // Use defaults.
-        if ($grade <= 0.5) {
+        if ($grade <= 5.) {
             return get_string('default_below_50', 'block_question_report');
-        } else if ($grade <= 0.575) {
+        } else if ($grade <= 5.75) {
             return get_string('default_below_57', 'block_question_report');
-        } else if ($grade <= 0.725) {
+        } else if ($grade <= 7.25) {
             return get_string('default_below_72', 'block_question_report');
-        } else if ($grade <= 0.875) {
+        } else if ($grade <= 8.75) {
             return get_string('default_below_87', 'block_question_report');
         }
         return get_string('default_below_100', 'block_question_report');
