@@ -34,6 +34,7 @@ $string['view'] = 'Einsehen';
 $string['totalrating'] = 'Gesamtwertung';
 $string['partrating'] = 'Teil Bewertung';
 $string['attempts'] = 'Versuche';
+$string['question_report:addinstance'] = 'Hinzufügen eines neuen Fragenberichtsblocks';
 
 $string['download'] = 'Herunterladen';
 $string['default_below_50'] = 'nicht ausreichend';

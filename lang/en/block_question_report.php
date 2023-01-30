@@ -34,6 +34,7 @@ $string['view'] = 'view';
 $string['totalrating'] = 'Total rating';
 $string['partrating'] = 'Part rating';
 $string['attempts'] = 'Attempts';
+$string['question_report:addinstance'] = 'Add a new question report block';
 
 $string['download'] = 'Download';
 $string['default_below_50'] = 'not sufficient';
