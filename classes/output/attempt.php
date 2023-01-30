@@ -135,8 +135,10 @@ class attempt implements renderable, templatable {
         foreach ($this->result as $result) {
             $output = [];
             foreach ($result->matrixrows as $matrixrow) {
-                $rowmetrics[$matrixrow->name][] = $matrixrow->fraction;
-                $rowgroupmetrics[$matrixrow->name][] = $this->averageresult['rowmap'][$matrixrow->id];
+                $key = strtolower(trim($matrixrow->name));
+                $key = strtoupper($key[0]) . substr($key, 1);
+                $rowmetrics[$key][] = $matrixrow->fraction;
+                $rowgroupmetrics[$key][] = $this->averageresult['rowmap'][$matrixrow->id];
                 $output[] = [
                     'name' => $matrixrow->name,
                     'color' => $this->make_color(1 - $matrixrow->fraction),
