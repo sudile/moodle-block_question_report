@@ -224,9 +224,9 @@ class util {
         $minfo = get_fast_modinfo($courseid);
         $cm = $minfo->get_cm($cmid);
         $users = self::get_quiz_users($cm->instance);
-        $averageattempt = util::average_users_attempts($cm->instance, $users);
         $rows = [];
         $additionalcolumns = [];
+        $averagecolumns = [];
         foreach ($users as $userid) {
             $attempts = array_values(quiz_get_user_attempts([$cm->instance], $userid));
             if (count($attempts) !== 0) {
@@ -240,13 +240,11 @@ class util {
                         foreach ($resultentry->matrixrows as $matrixrow) {
                             $key = strtolower(trim($matrixrow->name));
                             $key = strtoupper($key[0]) . substr($key, 1);
-                            $additionalcolumns[$resultentry->id . '-'.$resultentry->name . '-' . $key] = $resultentry->name . '-' . $key;
+                            $additionalcolumns[$resultentry->id . '-' . $resultentry->name . '-' . $key] = $resultentry->name . '-' . $key;
                             $rowmetrics[$key][] = $matrixrow->fraction;
-                            $rowgroupmetrics[$key][] = $averageattempt['rowmap'][$matrixrow->id];
                             $output[] = [
                                 'name' => $matrixrow->name,
                                 'fraction' => round($matrixrow->fraction * 100, 2) . '%',
-                                'avg' => $averageattempt['rowmap'][$matrixrow->id] * 100,
                             ];
                         }
                         if ($resultentry->fraction >= 1) {
@@ -256,26 +254,20 @@ class util {
                             'name' => $resultentry->name,
                             'subpoints' => $output,
                             'fraction' => round($resultentry->fraction * 100, 2) . '%',
-                            'avg' => $averageattempt['map'][$resultentry->questionid] * 100,
                         ];
                     }
-                    $labels = [];
                     $series = [];
-                    $groupseries = [];
                     foreach ($rowmetrics as $label => $rowmetric) {
-                        $labels[] = $label;
-                        $series[] = round(array_sum($rowmetric) / count($rowmetric) * 100, 2);
+                        $averagecolumns[$label] = $label;
+                        $series[$label] = round(array_sum($rowmetric) / count($rowmetric) * 100, 2);
                     }
-                    foreach ($rowgroupmetrics as $rowgroupmetric) {
-                        $groupseries[] = round(array_sum($rowgroupmetric) / count($rowgroupmetric) * 100, 2);
-                    }
-                    // Todo: add group data to the rows ? or store them global and avoid regeneration?
                     $rows[] = [
                         'userid' => $userid,
                         'attemptid' => $attemptobj->attempt,
                         'timestart' => $attemptobj->timestart,
                         'timefinish' => $attemptobj->timefinish,
-                        'results' => $attemptresults
+                        'results' => $attemptresults,
+                        'avgs' => $series,
                     ];
                 }
             }
@@ -285,38 +277,54 @@ class util {
         $workbook = new MoodleExcelWorkbook('export.xlsx', 'Xslx');
         $worksheet = $workbook->add_worksheet('User Attempts');
         $defaults = ['attemptid', 'lastname', 'firstname', 'email', 'started', 'completed', 'timetaken'];
+        $columncount = 0;
         // add columns for each question
         foreach ($defaults as $key => $column) {
             $worksheet->write_string(0,
-                $key,
+                $columncount++,
                 new \lang_string('table_' . $column, 'block_question_report'),
                 $workbook->add_format(['size' => 14, 'bold' => 1]));
         }
-        $worksheet->set_column(0, count($defaults), 20);
-        foreach (array_values($additionalcolumns) as $key => $column) {
+
+        foreach ($additionalcolumns as $column) {
             $worksheet->write_string(0,
-                count($defaults) + $key,
+                $columncount++,
                 $column,
                 $workbook->add_format(['size' => 14, 'bold' => 1]));
         }
+        foreach ($averagecolumns as $label) {
+            $worksheet->write_string(0,
+                $columncount++,
+                $label,
+                $workbook->add_format(['size' => 14, 'bold' => 1]));
+        }
+        $worksheet->set_column(0, $columncount, 20);
+
         $worksheet->set_column(count($defaults), count($additionalcolumns) + count($defaults), 20);
         $users = user_get_users_by_id($users);
         foreach ($rows as $rowid => $row) {
-            $worksheet->write_string($rowid + 1, 0, $row['attemptid']);
             $user = $users[$row['userid']];
-            $worksheet->write_string($rowid + 1, 1, $user->lastname);
-            $worksheet->write_string($rowid + 1, 2, $user->firstname);
-            $worksheet->write_string($rowid + 1, 3, $user->email);
-            $worksheet->write_string($rowid + 1, 4, userdate($row['timestart']));
-            $worksheet->write_string($rowid + 1, 5, userdate($row['timefinish']));
-            $worksheet->write_string($rowid + 1, 6, format_time($row['timestart'] - $row['timefinish']));
-            $rowcount = 7;
+            $columns = [
+                $row['attemptid'],
+                $user->lastname,
+                $user->firstname,
+                $user->email,
+                userdate($row['timestart']),
+                userdate($row['timefinish']),
+                format_time($row['timestart'] - $row['timefinish'])
+            ];
+            $columncount = 0;
+            foreach ($columns as $column) {
+                $worksheet->write_string($rowid + 1, $columncount++, $column);
+            }
             foreach ($row['results'] as $result) {
                 foreach ($result['subpoints'] as $subpoint) {
-                    $worksheet->write_string($rowid + 1, $rowcount++, $subpoint['fraction']);
+                    $worksheet->write_string($rowid + 1, $columncount++, $subpoint['fraction']);
                 }
             }
-            //var_dump($row);
+            foreach ($row['avgs'] as $avg) {
+                $worksheet->write_string($rowid + 1, $columncount++, $avg . '%');
+            }
         }
         $workbook->close();
         $workbook->send('export.xslx');
