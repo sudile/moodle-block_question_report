@@ -25,6 +25,11 @@
             <a href="{{{url}}}">
                 {{#str}}view, block_question_report{{/str}}
             </a>
+            {{#candownload}}
+                 - <a href="{{{dowloadurl}}}">
+                    {{#str}}dowloadxlsx, block_question_report{{/str}}
+                </a>
+            {{/candownload}}
         </div>
     {{/quizzes}}
 </div>

@@ -35,6 +35,8 @@ $string['totalrating'] = 'Total rating';
 $string['partrating'] = 'Part rating';
 $string['attempts'] = 'Attempts';
 $string['question_report:addinstance'] = 'Add a new question report block';
+$string['question_report:myaddinstance'] = 'Add a new question report block';
+$string['question_report:download'] = 'Allow downloads';
 
 $string['download'] = 'Download';
 $string['default_below_50'] = 'not sufficient';
@@ -55,3 +57,13 @@ $string['config_data_visibility'] = 'Data visibility';
 $string['data_visibility_all'] = 'Show all';
 $string['data_visibility_diagram'] = 'Only diagram';
 $string['data_visibility_table'] = 'Only table';
+
+$string['table_attemptid'] = 'Attempt number';
+$string['table_lastname'] = 'Last name';
+$string['table_firstname'] = 'First name';
+$string['table_email'] = 'E-mail';
+$string['table_state'] = 'Status';
+$string['table_started'] = 'Started';
+$string['table_completed'] = 'Completed';
+$string['table_timetaken'] = 'Attempt duration';
+$string['dowloadxlsx'] = 'download';

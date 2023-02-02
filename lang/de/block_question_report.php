@@ -35,6 +35,8 @@ $string['totalrating'] = 'Gesamtwertung';
 $string['partrating'] = 'Teil Bewertung';
 $string['attempts'] = 'Versuche';
 $string['question_report:addinstance'] = 'Hinzufügen eines neuen Fragenberichtsblocks';
+$string['question_report:myaddinstance'] = 'Hinzufügen eines neuen Fragenberichtsblocks';
+$string['question_report:download'] = 'Download erlauben';
 
 $string['download'] = 'Herunterladen';
 $string['default_below_50'] = 'nicht ausreichend';
@@ -55,3 +57,13 @@ $string['config_data_visibility'] = 'Sichtbarkeitseinstellungen';
 $string['data_visibility_all'] = 'Zeige alles';
 $string['data_visibility_diagram'] = 'Nur Diagramm';
 $string['data_visibility_table'] = 'Nur Tabelle';
+
+$string['table_attemptid'] = 'Versuchsnummer';
+$string['table_lastname'] = 'Nachname';
+$string['table_firstname'] = 'Vorname';
+$string['table_email'] = 'Email';
+$string['table_state'] = 'Status';
+$string['table_started'] = 'Gestarted';
+$string['table_completed'] = 'Abgeschlossen';
+$string['table_timetaken'] = 'Versuchsdauer';
+$string['dowloadxlsx'] = 'download';

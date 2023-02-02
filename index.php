@@ -33,6 +33,7 @@ require('../../config.php');
 $id = required_param('id', PARAM_INT);
 $cmid = required_param('cmid', PARAM_INT);
 $attempt = optional_param('attempt', 0, PARAM_INT);
+$download = optional_param('download', false, PARAM_BOOL);
 
 $contextcourse = context_block::instance($id);
 
@@ -41,6 +42,11 @@ $course = get_course($contextcourse->get_parent_context()->instanceid);
 $PAGE->set_url(new moodle_url('/blocks/question_report/index.php'));
 require_login($course);
 $PAGE->set_context($contextcourse);
+
+if ($download && has_capability('block/question_report:download', context_block::instance($id))) {
+    util::craft_xlsx($course->id, $cmid);
+    exit();
+}
 
 $renderer = $PAGE->get_renderer('block_question_report');
 if ($cmid !== 0) {

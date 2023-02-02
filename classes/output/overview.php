@@ -56,7 +56,8 @@ class overview implements renderable, templatable {
 
     public function export_for_template(renderer_base $output): array {
         $data = [
-            'quizzes' => []
+            'quizzes' => [],
+            'candownload' => has_capability('block/question_report:download', \context_block::instance($this->instanceid)),
         ];
         foreach ($this->quizlist as $quiz) {
             $data['quizzes'][] = [
@@ -64,6 +65,8 @@ class overview implements renderable, templatable {
                 'url' => new \moodle_url('/blocks/question_report/index.php',
                     ['id' => $this->instanceid, 'cmid' => $quiz->id]),
                 'description' => $quiz->content,
+                'dowloadurl' => new \moodle_url('/blocks/question_report/index.php',
+                    ['id' => $this->instanceid, 'cmid' => $quiz->id, 'download' => '1']),
             ];
         }
         return $data;

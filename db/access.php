@@ -34,7 +34,6 @@ $capabilities = [
         'archetypes' => [
             'user' => CAP_ALLOW
         ],
-
         'clonepermissionsfrom' => 'moodle/my:manageblocks'
     ],
 
@@ -43,6 +42,17 @@ $capabilities = [
         'captype' => 'write',
         'contextlevel' => CONTEXT_BLOCK,
         'archetypes' => [
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ],
+        'clonepermissionsfrom' => 'moodle/site:manageblocks'
+    ],
+    'block/question_report:download' => [
+        'riskbitmask' => RISK_PERSONAL,
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_BLOCK,
+        'archetypes' => [
+            'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
         ],
