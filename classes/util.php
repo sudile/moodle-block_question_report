@@ -213,22 +213,34 @@ class util {
     }
 
 
-    public static function load_attempt_feedback(int $quizid, int $uniqueid): array {
+    public static function load_attempt_feedback(int $uniqueid): array {
         $x = question_engine::load_questions_usage_by_activity($uniqueid);
         $result = [];
+        $labels = [];
         foreach ($x->get_slots() as $slot) {
             $questionattempt = $x->get_question_attempt($slot);
             $question = $questionattempt->get_question();
+            $behaviour = $questionattempt->get_behaviour();
+            if ($behaviour !== null && $behaviour->get_name() == 'studentfeedbackdeferred') {
+                if ($behaviour instanceof \qbehaviour_studentfeedbackdeferred) {
+                    $data = $questionattempt->get_last_step_with_behaviour_var('_studentfeedback');
+                    if ($data->has_behaviour_var('_studentfeedback')) {
+                        $result[$question->id . '-behavior'] = $data->get_behaviour_var('_studentfeedback');
+                        $labels[$question->id . '-behavior'] = $question->name;
+                    }
+                }
+            }
             if ($question->get_type_name() == 'essay') {
                 if ($question instanceof \qtype_essay_question) {
                     $data = $questionattempt->get_steps_with_submitted_response_iterator()->current()->get_all_data();
                     // The typecast to string is needed since the question_file_loader __ToString needs to be called to
                     // get the value field of this attempt.
                     $result[$question->id . '-' . $question->name] = strip_tags((string) $data["answer"]);
+                    $labels[$question->id . '-' . $question->name] = $question->name;
                 }
             }
         }
-        return $result;
+        return ['labels' => $labels, 'results' => $result];
     }
 
     /**
@@ -276,9 +288,9 @@ class util {
                             'fraction' => round($resultentry->fraction * 100, 2) . '%',
                         ];
                     }
-                    $usrfeedback = self::load_attempt_feedback($cm->instance, $attemptobj->uniqueid);
-                    foreach ($usrfeedback as $label => $feedback) {
-                        $feedbackcolumns[$label] = $label;
+                    $usrfeedback = self::load_attempt_feedback($attemptobj->uniqueid);
+                    foreach ($usrfeedback['labels'] as $label => $labelname) {
+                        $feedbackcolumns[$label] = $labelname;
                     }
 
                     $series = [];
@@ -293,7 +305,7 @@ class util {
                         'timefinish' => $attemptobj->timefinish,
                         'results' => $attemptresults,
                         'avgs' => $series,
-                        'feedback' => $usrfeedback
+                        'feedback' => $usrfeedback['results']
                     ];
                 }
             }
