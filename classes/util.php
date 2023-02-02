@@ -212,6 +212,25 @@ class util {
         return $result;
     }
 
+
+    public static function load_attempt_feedback(int $quizid, int $uniqueid): array {
+        $x = question_engine::load_questions_usage_by_activity($uniqueid);
+        $result = [];
+        foreach ($x->get_slots() as $slot) {
+            $questionattempt = $x->get_question_attempt($slot);
+            $question = $questionattempt->get_question();
+            if ($question->get_type_name() == 'essay') {
+                if ($question instanceof \qtype_essay_question) {
+                    $data = $questionattempt->get_steps_with_submitted_response_iterator()->current()->get_all_data();
+                    // The typecast to string is needed since the question_file_loader __ToString needs to be called to
+                    // get the value field of this attempt.
+                    $result[$question->id . '-' . $question->name] = strip_tags((string) $data["answer"]);
+                }
+            }
+        }
+        return $result;
+    }
+
     /**
      * @throws coding_exception
      * @throws dml_exception
@@ -227,12 +246,13 @@ class util {
         $rows = [];
         $additionalcolumns = [];
         $averagecolumns = [];
+        $feedbackcolumns = [];
         foreach ($users as $userid) {
             $attempts = array_values(quiz_get_user_attempts([$cm->instance], $userid));
             if (count($attempts) !== 0) {
                 foreach ($attempts as $attemptobj) {
                     $attemptresults = [];
-                    $result = util::load_attempt($cm->instance, $attemptobj->uniqueid);
+                    $result = self::load_attempt($cm->instance, $attemptobj->uniqueid);
                     $rowmetrics = [];
                     $rowgroupmetrics = [];
                     foreach ($result as $resultentry) {
@@ -256,6 +276,11 @@ class util {
                             'fraction' => round($resultentry->fraction * 100, 2) . '%',
                         ];
                     }
+                    $usrfeedback = self::load_attempt_feedback($cm->instance, $attemptobj->uniqueid);
+                    foreach ($usrfeedback as $label => $feedback) {
+                        $feedbackcolumns[$label] = $label;
+                    }
+
                     $series = [];
                     foreach ($rowmetrics as $label => $rowmetric) {
                         $averagecolumns[$label] = $label;
@@ -268,6 +293,7 @@ class util {
                         'timefinish' => $attemptobj->timefinish,
                         'results' => $attemptresults,
                         'avgs' => $series,
+                        'feedback' => $usrfeedback
                     ];
                 }
             }
@@ -293,6 +319,12 @@ class util {
                 $workbook->add_format(['size' => 14, 'bold' => 1]));
         }
         foreach ($averagecolumns as $label) {
+            $worksheet->write_string(0,
+                $columncount++,
+                $label,
+                $workbook->add_format(['size' => 14, 'bold' => 1]));
+        }
+        foreach ($feedbackcolumns as $label) {
             $worksheet->write_string(0,
                 $columncount++,
                 $label,
@@ -324,6 +356,9 @@ class util {
             }
             foreach ($row['avgs'] as $avg) {
                 $worksheet->write_string($rowid + 1, $columncount++, $avg . '%');
+            }
+            foreach ($row['feedback'] as $feedback) {
+                $worksheet->write_string($rowid + 1, $columncount++, $feedback);
             }
         }
         $workbook->close();
