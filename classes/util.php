@@ -232,11 +232,17 @@ class util {
             }
             if ($question->get_type_name() == 'essay') {
                 if ($question instanceof \qtype_essay_question) {
-                    $data = $questionattempt->get_steps_with_submitted_response_iterator()->current()->get_all_data();
-                    // The typecast to string is needed since the question_file_loader __ToString needs to be called to
-                    // get the value field of this attempt.
-                    $result[$question->id . '-' . $question->name] = strip_tags((string) $data["answer"]);
-                    $labels[$question->id . '-' . $question->name] = $question->name;
+                    $current = $questionattempt->get_steps_with_submitted_response_iterator()->current();
+                    if ($current !== null) {
+                        $data = $current->get_all_data();
+                        // The typecast to string is needed since the question_file_loader __ToString needs to be called to
+                        // get the value field of this attempt.
+                        $result[$question->id . '-' . $question->name] = strip_tags((string) $data["answer"]);
+                        $labels[$question->id . '-' . $question->name] = $question->name;
+                    } else {
+                        $result[$question->id . '-' . $question->name] = '';
+                        $labels[$question->id . '-' . $question->name] = $question->name;
+                    }
                 }
             }
         }
