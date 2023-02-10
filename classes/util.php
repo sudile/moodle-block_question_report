@@ -225,21 +225,21 @@ class util {
                 if ($behaviour instanceof \qbehaviour_studentfeedbackdeferred) {
                     $data = $questionattempt->get_last_step_with_behaviour_var('_studentfeedback');
                     if ($data->has_behaviour_var('_studentfeedback')) {
-                        $result[$question->id . '-behavior'] = $data->get_behaviour_var('_studentfeedback');
-                        $labels[$question->id . '-behavior'] = $question->name;
+                        $result[$slot . '-behavior'] = $data->get_behaviour_var('_studentfeedback');
+                        $labels[$slot . '-behavior'] = $question->name;
                     }
                 }
             }
             if ($question->get_type_name() == 'essay') {
                 if ($question instanceof \qtype_essay_question) {
                     $current = $questionattempt->get_steps_with_submitted_response_iterator()->current();
-                    $labels[$question->id . '-' . $question->name] = $question->name;
-                    $result[$question->id . '-' . $question->name] = '';
+                    $labels[$slot . '-' . $question->name] = $question->name;
+                    $result[$slot . '-' . $question->name] = '';
                     if ($current !== null) {
                         $data = $current->get_all_data();
                         // The typecast to string is needed since the question_file_loader __ToString needs to be called to
                         // get the value field of this attempt.
-                        $result[$question->id . '-' . $question->name] = strip_tags((string) $data["answer"]);
+                        $result[$slot . '-' . $question->name] = strip_tags((string) $data["answer"]);
                     }
                 }
             }
