@@ -196,7 +196,9 @@ class util {
                 }
             }
             $fraction = $questionattempt->get_fraction();
-            if ($fraction === null) {
+            if ($question->get_type_name() != 'matrix' && $fraction === null) {
+                continue;
+            } else if ($fraction === null) {
                 $fraction = 0.0;
             }
 
