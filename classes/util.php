@@ -197,8 +197,9 @@ class util {
             }
             $fraction = $questionattempt->get_fraction();
             if ($fraction === null) {
-                continue;
+                $fraction = 0.0;
             }
+
             $result[] = new result_entry(
                 $slot,
                 $fraction,
