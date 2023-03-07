@@ -180,25 +180,24 @@ class util {
             $questionattempt = $x->get_question_attempt($slot);
             $question = $questionattempt->get_question();
             $subpoints = [];
-            if ($question->get_type_name() == 'matrix') {
-                if ($question instanceof qtype_matrix_question) {
-                    $grading = $question->grading();
-                    $data = $questionattempt->get_steps_with_submitted_response_iterator()->current()->get_all_data();
-                    foreach ($question->rows as $row) {
-                        $fraction = $grading->grade_row($question, $row, $data);
-                        $subpoints[] = new matrix_row(
-                            $row->id,
-                            $fraction,
-                            $row->shorttext,
-                            self::feedback_for_grade($quizid, $fraction)
-                        );
-                    }
-                }
-            }
-            $fraction = $questionattempt->get_fraction();
-            if ($question->get_type_name() != 'matrix' && $fraction === null) {
+            if ($question->get_type_name() != 'matrix' || !($question instanceof qtype_matrix_question)) {
                 continue;
-            } else if ($fraction === null) {
+            }
+
+            $grading = $question->grading();
+            $data = $questionattempt->get_steps_with_submitted_response_iterator()->current()->get_all_data();
+            foreach ($question->rows as $row) {
+                $fraction = $grading->grade_row($question, $row, $data);
+                $subpoints[] = new matrix_row(
+                    $row->id,
+                    $fraction,
+                    $row->shorttext,
+                    self::feedback_for_grade($quizid, $fraction)
+                );
+            }
+
+            $fraction = $questionattempt->get_fraction();
+            if ($fraction === null) {
                 $fraction = 0.0;
             }
 
