@@ -24,7 +24,7 @@
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
  */
 function block_question_report_pluginfile($course,
-    $birecord_or_cm,
+    $birecordorcm,
     $context,
     $filearea,
     $args,
@@ -70,23 +70,23 @@ function block_question_report_pluginfile($course,
             'content',
             0,
             $filepath,
-            $filename) or $file->is_directory()) {
+            $filename) || $file->is_directory()) {
         send_file_not_found();
     }
 
-    if ($parentcontext = context::instance_by_id($birecord_or_cm->parentcontextid, IGNORE_MISSING)) {
+    if ($parentcontext = context::instance_by_id($birecordorcm->parentcontextid, IGNORE_MISSING)) {
         if ($parentcontext->contextlevel == CONTEXT_USER) {
-            // force download on all personal pages including /my/
-            //because we do not have reliable way to find out from where this is used
+            // Force download on all personal pages including /my/,
+            // because we do not have reliable way to find out from where this is used.
             $forcedownload = true;
         }
     } else {
-        // weird, there should be parent context, better force dowload then
+        // Weird, there should be parent context, better force download then.
         $forcedownload = true;
     }
 
-    // NOTE: it woudl be nice to have file revisions here, for now rely on standard file lifetime,
-    //       do not lower it because the files are dispalyed very often.
+    // NOTE: it would be nice to have file revisions here, for now rely on standard file lifetime,
+    // do not lower it because the files are displayed very often.
     \core\session\manager::write_close();
     send_stored_file($file, null, 0, $forcedownload, $options);
 }

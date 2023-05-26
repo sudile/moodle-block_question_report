@@ -43,7 +43,7 @@ class block_question_report_edit_form extends block_edit_form {
             $editoroptions);
         $mform->addRule('config_text', null, 'required', null, 'client');
         $mform->setType('config_text',
-            PARAM_RAW); // XSS is prevented when printing the block contents and serving files
+            PARAM_RAW); // XSS is prevented when printing the block contents and serving files.
 
         $mform->addElement('select',
             'config_data_visibility',
@@ -61,30 +61,30 @@ class block_question_report_edit_form extends block_edit_form {
      * @param stdClass $defaults
      * @return void
      */
-    function set_data($defaults): void {
+    public function set_data($defaults): void {
         if (!empty($this->block->config) && !empty($this->block->config->text)) {
             $text = $this->block->config->text;
-            $draftid_editor = file_get_submitted_draft_itemid('config_text');
+            $draftideditor = file_get_submitted_draft_itemid('config_text');
             if (empty($text)) {
                 $currenttext = '';
             } else {
                 $currenttext = $text;
             }
-            $defaults->config_text['text'] = file_prepare_draft_area($draftid_editor,
+            $defaults->config_text['text'] = file_prepare_draft_area($draftideditor,
                 $this->block->context->id,
                 'block_question_report',
                 'content',
                 0,
                 ['subdirs' => true],
                 $currenttext);
-            $defaults->config_text['itemid'] = $draftid_editor;
+            $defaults->config_text['itemid'] = $draftideditor;
             $defaults->config_text['format'] = $this->block->config->format ?? FORMAT_MOODLE;
         } else {
             $text = '';
         }
 
         if (!$this->block->user_can_edit() && !empty($this->block->config->data_visibility)) {
-            // If a title has been set but the user cannot edit it format it nicely
+            // If a title has been set but the user cannot edit it format it nicely.
             $visibility = $this->block->config->data_visibility;
             if ($visibility <= 0 || $visibility >= 3) {
                 $visibility = 1;
@@ -94,17 +94,16 @@ class block_question_report_edit_form extends block_edit_form {
             unset($this->block->config->data_visibility);
         }
 
-        // have to delete text here, otherwise parent::set_data will empty content
-        // of editor
+        // Have to delete text here, otherwise parent::set_data will empty content of editor.
         unset($this->block->config->text);
         parent::set_data($defaults);
-        // restore $text
+        // Restore $text content.
         if (!isset($this->block->config)) {
             $this->block->config = new stdClass();
         }
         $this->block->config->text = $text;
         if (isset($visibility)) {
-            // Reset the preserved visibility
+            // Reset the preserved visibility.
             $this->block->config->title = $visibility;
         }
     }

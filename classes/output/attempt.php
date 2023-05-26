@@ -104,7 +104,7 @@ class attempt implements renderable, templatable {
             'content',
             null);
         $format = FORMAT_HTML;
-        // Check to see if the format has been properly set on the config
+        // Check to see if the format has been properly set on the config.
         if (isset($configdata->format)) {
             $format = $configdata->format;
         }

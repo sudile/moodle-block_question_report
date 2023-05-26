@@ -278,7 +278,8 @@ class util {
                         foreach ($resultentry->matrixrows as $matrixrow) {
                             $key = strtolower(trim($matrixrow->name));
                             $key = strtoupper($key[0]) . substr($key, 1);
-                            $additionalcolumns[$resultentry->id . '-' . $resultentry->name . '-' . $key] = $resultentry->name . '-' . $key;
+                            $addkey = $resultentry->id . '-' . $resultentry->name . '-' . $key;
+                            $additionalcolumns[$addkey] = $resultentry->name . '-' . $key;
                             $rowmetrics[$key][] = $matrixrow->fraction;
                             $output[] = [
                                 'name' => $matrixrow->name,
@@ -322,7 +323,7 @@ class util {
         $worksheet = $workbook->add_worksheet('User Attempts');
         $defaults = ['attemptid', 'lastname', 'firstname', 'email', 'started', 'completed', 'timetaken'];
         $columncount = 0;
-        // add columns for each question
+        // Add columns for each question.
         foreach ($defaults as $key => $column) {
             $worksheet->write_string(0,
                 $columncount++,

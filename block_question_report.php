@@ -30,7 +30,7 @@ class block_question_report extends block_base {
     /**
      * @return true
      */
-    function has_config(): bool {
+    public function has_config(): bool {
         return true;
     }
 
@@ -65,9 +65,9 @@ class block_question_report extends block_base {
     /**
      * Serialize and store config data
      */
-    function instance_config_save($data, $nolongerused = false) {
+    public function instance_config_save($data, $nolongerused = false) {
         $config = clone($data);
-        // Move embedded files into a proper filearea and adjust HTML links to match
+        // Move embedded files into a proper filearea and adjust HTML links to match.
         $config->text = file_save_draft_area_files($data->text['itemid'],
             $this->context->id,
             'block_question_report',
@@ -83,7 +83,7 @@ class block_question_report extends block_base {
     /**
      * @return true
      */
-    function instance_delete(): bool {
+    public function instance_delete(): bool {
         $fs = get_file_storage();
         $fs->delete_area_files($this->context->id, 'block_question_report');
         return true;
@@ -122,20 +122,20 @@ class block_question_report extends block_base {
      * @return bool
      * @throws coding_exception
      */
-    function content_is_trusted(): bool {
+    public function content_is_trusted(): bool {
         global $SCRIPT;
 
         if (!$context = context::instance_by_id($this->instance->parentcontextid, IGNORE_MISSING)) {
             return false;
         }
-        //find out if this block is on the profile page
+        // Find out if this block is on the profile page.
         if ($context->contextlevel == CONTEXT_USER) {
             if ($SCRIPT === '/my/index.php') {
-                // this is exception - page is completely private, nobody else may see content there
-                // that is why we allow JS here
+                // This is exception - page is completely private, nobody else may see content there,
+                // that is why we allow JS here.
                 return true;
             } else {
-                // no JS on public personal pages, it would be a big security issue
+                // No JS on public personal pages, it would be a big security issue.
                 return false;
             }
         }

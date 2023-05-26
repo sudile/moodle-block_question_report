@@ -22,6 +22,8 @@
  * @author     Vincent Schneider <vincent.schneider@sudile.com>
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Specialised restore task for the question_report block
  * (requires encode_content_links in some configdata attrs)
@@ -39,10 +41,10 @@ class restore_question_report_block_task extends restore_block_task {
     }
 
     public function get_configdata_encoded_attributes(): array {
-        return ['text']; // We need to encode some attrs in configdata
+        return ['text']; // We need to encode some attrs in configdata.
     }
 
-    static public function define_decode_contents(): array {
+    public static function define_decode_contents(): array {
 
         $contents = [];
 
@@ -51,7 +53,7 @@ class restore_question_report_block_task extends restore_block_task {
         return $contents;
     }
 
-    static public function define_decode_rules(): array {
+    public static function define_decode_rules(): array {
         return [];
     }
 }
@@ -63,12 +65,12 @@ class restore_question_report_block_task extends restore_block_task {
  */
 class restore_question_report_block_decode_content extends restore_decode_content {
 
-    protected $configdata; // Temp storage for unserialized configdata
+    protected $configdata; // Temp storage for unserialized configdata.
 
     protected function get_iterator() {
         global $DB;
 
-        // Build the SQL dynamically here
+        // Build the SQL dynamically here.
         $fieldslist = 't.' . implode(', t.', $this->fields);
         $sql = "SELECT t.id, $fieldslist
                   FROM {" . $this->tablename . "} t

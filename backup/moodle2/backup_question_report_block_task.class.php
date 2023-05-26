@@ -39,11 +39,11 @@ class backup_question_report_block_task extends backup_block_task {
     }
 
     public function get_configdata_encoded_attributes(): array {
-        return ['text']; // We need to encode some attrs in configdata
+        return ['text']; // We need to encode some attrs in configdata.
     }
 
-    static public function encode_content_links($content) {
-        return $content; // No special encoding of links
+    public static function encode_content_links($content) {
+        return $content; // No special encoding of links.
     }
 }
 
